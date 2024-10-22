@@ -1,0 +1,172 @@
+import numpy as np
+import cupy as cp  # Import CuPy
+from util import K, N_K, get_unique_filename
+from scipy.optimize import minimize
+from time import time
+from scipy.stats import entropy
+from multiprocessing import Pool
+import pandas as pd
+import os
+from typing import Tuple
+
+
+
+def Schmidt(Gamma1: float, Gamma2: float, t1: float, t2: float, n: int, gpu_id: int = 0 , GPU = False):
+    r"""
+    Computes the Schmidt decomposition of the optimal entangled photon profile using SVD on either CPU or GPU(s).
+
+    This function performs the Schmidt decomposition of the entangled photon profile function `K` 
+    by using the Singular Value Decomposition (SVD). 
+
+    Parameters:
+    -----------
+    Gamma1 : float
+        The coupling constant to the middle state ($\Gamma_e$), which is the inverse of the lifetime 
+        of the atom in the middle state.   
+    
+    Gamma2 : float
+        The coupling constant to the final state ($\Gamma_f$), related to the transition from the middle 
+        state to the final state.
+    
+    t1 : float
+        The initial time parameter of the first photon (optimized).
+    
+    t2 : float
+        The initial time parameter of the second photon (optimized).
+    
+    n : int
+        The number of mesh points used for the calculation. Higher values provide better resolution but 
+        consume more memory.
+    
+    gpu_id : int, optional
+        The ID of the GPU to use for computation in the case of several GPUs. Default is `0`, which
+        corresponds to the first available GPU.
+
+    GPU : bool, optional (default=False)
+        Specifies whether to utilize GPU resources for the computation of the singular value decomposition (SVD).
+        - If set to `False`, the computation will be performed using CPU resources.
+        - If set to `True`, the function will leverage GPU resources for potentially improved performance.
+        
+    Returns:
+    --------
+    numpy.ndarray
+        A 1D array containing the singular values resulting from the Schmidt decomposition.
+
+    
+    Example:
+    --------
+    >>> Parameters = pd.read_csv('Optimized_Schmit_vars_all.csv')
+    >>> gpu_ids = [0, 1] * (len(Parameters) // 2) + [1] * (len(Parameters) % 2)  # Alternate between 0 and 1
+    >>> p = Pool(2)
+    >>> p.map(task, zip(Parameters['Gamma1'], Parameters['t1'], Parameters['t2'], Parameters['f'], gpu_ids))
+
+
+    Notes:
+    ------
+    - The function uses `CuPy` for GPU-based computations and requires a CUDA-enabled GPU.
+    - Memory management is handled by freeing GPU memory blocks after computation to optimize resource usage.
+    - The function relies on the optimal photon profile `K` and the normalization factor `N_K` to perform the computation.
+
+    """
+    if GPU:
+        import cupy as cp
+        with cp.cuda.Device(gpu_id):
+            mempool = cp.get_default_memory_pool()   
+            mempool.free_all_blocks()
+            X, Y = cp.meshgrid(cp.linspace(t1, 0, n, endpoint=False), cp.linspace(t2, 0, n, endpoint=False))
+            Z_gpu = K(Gamma1, Gamma2, -cp.inf, 0, GPU = GPU)(X, Y) / N_K(Gamma1, Gamma2, -cp.inf, 0, GPU = GPU)**0.5
+            del X, Y                         # To reduce the gpu memory usage
+            Z_gpu = cp.linalg.svd(Z_gpu, compute_uv=False)
+            Z = cp.asnumpy(Z_gpu)
+            mempool = cp.get_default_memory_pool()
+            mempool.free_all_blocks()
+            return Z * (t1 * t2) / n**2
+    else:
+        import numpu as cp
+        X, Y = cp.meshgrid(cp.linspace(t1, 0, n, endpoint=False), cp.linspace(t2, 0, n, endpoint=False))
+        Z_gpu = K(Gamma1, Gamma2, -cp.inf, 0, GPU = GPU)(X, Y) / N_K(Gamma1, Gamma2, -cp.inf, 0, GPU = GPU)**0.5
+        del X, Y                         # To reduce the gpu memory usage
+        return Z_gpu * (t1 * t2) / n**2
+        
+
+def task(params: Tuple[float, float, float, float, int])-> None:
+    r"""
+    Computes the Schmidt decomposition for a given set of parameters, calculates the entanglement entropy,
+    and stores the results in a CSV file.
+
+    This function is used to evaluate the Schmidt decomposition and entanglement entropy based on the parameters
+    prepared from the `Schmidt_optimal_limits` function. The results, including the entanglement entropy, SVD calculation
+    time, and other parameters, are appended to a CSV file for further analysis.
+
+    Parameters:
+    -----------
+    params : tuple
+        A tuple containing four float values:
+        - `Gamma1`: The coupling constant to the middle state ($\Gamma_e$).
+        - `t1`: The optimal initial time of the first photon.
+        - `t2`: The optimal initial time of the second photon.
+        - `f`: A covering factor for the entanglement entropy calculation.
+        - `gpu_id`: The GPU ID to use for the computation. Default is 0 for GPU 0.
+
+    Notes:
+    ------
+    - The parameters (`Gamma1`, `t1`, `t2`, and `f`) come from a previously prepared file, typically generated by the 
+      `Schmidt_optimal_limits` function.
+    - The decomposition is performed using the `Schmidt` function, followed by calculation of the entanglement entropy 
+      based on the squared singular values.
+    - The entanglement entropy is computed as the Shannon entropy.
+    - Results are stored in a CSV file, where each row represents a set of parameters along with the calculated values.
+
+    Example:
+    --------
+    Given the following parameter tuple `params = (1.0, 0.1, 0.2, 0.3)`, the function will:
+    - Perform Schmidt decomposition on the photon profile.
+    - Calculate the entanglement entropy.
+    - Append the results to the `Schmidt_results.csv` file.
+
+    >>> task((1.0, 0.1, 0.2, 0.3))
+
+    The result will include the entanglement entropy and execution time for the decomposition, which will be printed
+    and saved in the `Optimized_Schmit_vars_all.csv` file.
+
+    """
+    
+    Gamma1, t1, t2, f, gpu_id = params
+    t = time()
+    f = 1 - f**0.5    
+    r = Schmidt(Gamma1, Gamma2, t1, t2, n, gpu_id)
+    r **= 2
+    r /= sum(r)
+    e = entropy(r, base=2)
+    tsvd = time() - t
+    
+    print(f'Entanglement entropy = {e:5f}, execution time = {tsvd:5f}')
+    
+    res = {
+        'Gamma1': Gamma1,
+        'Gamma2': Gamma2,
+        'N': n, 't1': t1,
+        't2': t2,
+        'covering': f,
+        'svd calculation time': tsvd,
+        'entropy': e,
+        'max_Schmidt': r[0]
+    }
+    res = pd.DataFrame([res])
+    res.to_csv(fileName, mode='a', header=True, index=False)
+    return 
+
+fileName = get_unique_filename('Schmidt_results.csv')
+n = 2**13
+Gamma2 = 1
+
+# Parameters = pd.read_csv('Optimized_Schmit_vars_all.csv')
+Parameters = pd.read_csv('Optimized_Schmdit_variables.csv')
+gpu_ids = [0, 1] * (len(Parameters) // 2) + [1] * (len(Parameters) % 2)  # Alternate between 1 and 2
+
+p = Pool(2)               # Run on two GPUs simultaneously 
+p.map(task, zip(Parameters['Gamma1'], Parameters['t1'], Parameters['t2'] , Parameters['f'], gpu_ids ))
+df = pd.read_csv(fileName)
+df = df[df['Gamma1'] != 'Gamma1'].astype('float').reset_index(drop=True).sort_values(by=['Gamma1'])
+df.to_csv(fileName, index=False)
+print(f'All tasks done and saved in "{fileName}"')
