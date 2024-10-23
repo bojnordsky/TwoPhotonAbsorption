@@ -8,14 +8,18 @@ import operator
 import os
 
 
-def P_negated(Gamma1: float, Gamma2: float, Delta1: complex, Delta2: complex, t1: float, t2: float, psi: callable, tol: float =1e-8, limit: int = 100) -> callable:
+def P_negated(Gamma1: float, Gamma2: float, Delta1: complex, Delta2: complex, t0: float, t: float, psi: callable, tol: float =1e-8, limit: int = 100) -> callable:
     r"""
-    Computes the negated probability of excitation from the ground to the final state.
+    Computes the negated probability -P_f of excitation from the ground to the final state, where P_f (equation 18) is:
+
+    .. math::
+        P_{f}(t)= \Gamma_f\Gamma_e e^{-\Gamma_ft}\left|\int_{t_0}^{t}dt_2e^{\left(i\Delta_{2}+
+        \frac{1}{2}(\Gamma_f \Gamma_e)\right)t_2}\int_{t_0}^{t_2}dt_1e^{\left(i\Delta_1+\frac{\Gamma_e}{2} \right)t_1}\Psi(t_2,t_1)\right|^2
     
-    This function calculates the probability of transitioning from the ground state to the final state 
-    using the provided coupling constants, decoupling constants, time parameters, and photon profile (psi).
-    The result is negated to assist in optimization processes. The integration is performed using a 
-    two-step nested quadrature method.
+    #This function calculates the probability of transitioning from the ground state to the final state 
+    #using the provided coupling constants, detunning constants, coupling time span, and two-photon temporal profile (psi).
+    #The result is negated to assist in optimization processes.
+    The integration is performed using a two-step nested quadrature method (scipy.integrate.quad).
     
     Parameters:
     -----------
@@ -28,40 +32,33 @@ def P_negated(Gamma1: float, Gamma2: float, Delta1: complex, Delta2: complex, t1
         the middle state to the final state.
     
     Delta1 : float
-        The decoupling constant associated with the middle state.
+        The detunning from the frequency of the middle state.
     
     Delta2 : float
-        The decoupling constant associated with the final state.
+        The detunning from the frequency of the the final state.
     
-    t1 : float
-        The time parameter corresponding to the first photon (initial state).
+    t0 : float
+        The time when the coupling between the atom and the field STARTS.
     
-    t2 : float
-        The time parameter corresponding to the second photon (final state).
+    t : float
+        The time when the coupling between the atom and the field ENDS.
     
-    psi : callable
-        A function representing the photon profile, which can describe either entangled or unentangled photon 
-        pairs. It should take a tuple of parameters ($\Omega$ and $\mu$) and return a function of two time variables (t1, t2).
-    
+    psi : lambda *params: lambda t1,t2: complex
+        A callable that returns for a given set of parameters a two-argument function representing the two-photon temporal profile.
+            
     tol : float, optional
         The tolerance level for the numerical integration (default is 1e-8), controlling the accuracy of the 
         quadrature method.
     
     Returns:
     --------
-    function
-        A  function `inner(params)` that computes the negated probability of excitation from the ground 
-        to the final state for a given set of parameters.
-    
-    The computation is based on the following formula:
-    
-    .. math::
-        P(\text{negated}) = - \Gamma_e \cdot \Gamma_f \cdot | \int_{t1}^{t2} e^{-(i \Delta_f + \Gamma_f/2)(t_2 - s_2)}
-        \left( \int_{t1}^{s2} e^{-\Gamma_e (s_2 - s_1)/2 + i \Delta_e s_1} \psi(s_2, s_1) \, ds_1 \right) ds_2 |^2
+    lambda *params: -P_f
+        A  function that computes the negated probability of excitation from the ground 
+        to the final state for a given set of parameters.    
     
     """
     def inner(params):
-        intg = quad( lambda s2: np.exp(-(1j*Delta2+Gamma2/2)*(t2 - s2))*quad( lambda s1: np.exp(-Gamma1*(s2- s1)/2 + 1j*Delta1*s1)*psi(params)(s2,s1), t1, s2,epsabs=tol, complex_func=True )[0] ,t1, t2,epsabs=tol, limit = limit, complex_func=True)[0]
+        intg = quad( lambda s2: np.exp(-(1j*Delta2+Gamma2/2)*(t2 - s2))*quad( lambda s1: np.exp(-Gamma1*(s2- s1)/2 + 1j*Delta1*s1)*psi(params)(s2,s1), t0, s2,epsabs=tol, complex_func=True )[0] ,t0, t,epsabs=tol, limit = limit, complex_func=True)[0]
         return - Gamma1 * Gamma2 * np.abs(intg)**2
     return inner
 
@@ -69,14 +66,16 @@ def P_negated(Gamma1: float, Gamma2: float, Delta1: complex, Delta2: complex, t1
 
 
 
-def K(Gamma1: float, Gamma2: float, t1: float, t2: float, GPU: bool = False) -> callable:
+def Psi_opt(Gamma1: float, Gamma2: float, t0: float, t: float, GPU: bool = False) -> callable:
     r"""
-    Computes the optimal entangled photon profile function.
+    Returns the optimal entangled photon profile function (eqaution 21):
 
-    The function `K` returns a callable that represents the optimal entangled photon profile for a given 
-    set of parameters. This function is representing the Equation 21 of the paper. Optionally, the computation 
-    can be performed on the GPU using CuPy.
+    .. math::
+         \Psi_{opt}(t_2,t_1)=\frac{1}{\sqrt{\mathcal{N}}} e^{\frac{1}{2}(\Gamma_f-\Gamma_e)t_2+\frac{1}{2}\Gamma_{e}t_{1}} \chi_{t_0<t_1<t_2<t^\star},  
 
+    for a given set of the three-level system parameters. 
+    Optionally, the computation can be performed on the GPU using CuPy.
+    
     Parameters:
     -----------
     Gamma1 : float
@@ -87,32 +86,19 @@ def K(Gamma1: float, Gamma2: float, t1: float, t2: float, GPU: bool = False) -> 
         The coupling constant to the final state ($\Gamma_f$), related to the transition from 
         the middle state to the final state.
     
-    t1 : float
-        The initial time parameter of the first photon.
+    t0 : float
+        The time when the coupling between the atom and the field STARTS.
     
-    t2 : float
-        The initial time parameter of the second photon.
+    t : float
+        The time when the coupling between the atom and the field ENDS.
         
     GPU : bool, optional
         If `True`, the function will use `CuPy` for GPU-accelerated computations (default is `False`).
 
     Returns:
     --------
-    function
-        A function `inner(s1, s2)` that computes the entangled photon profile.
-    
-    Formula:
-    --------
-    .. math::
-         \Psi_{opt}(t_2,t_1)=\frac{1}{\sqrt{\mathcal{N}}} e^{\frac{1}{2}(\Gamma_f-\Gamma_e)t_2+\frac{1}{2}\Gamma_{e}t_{1}} \chi_{t_0<t_1<t_2<t^\star},  
-    
-    
-    Example:
-    --------
-    For `Gamma1 = 1.0`, `Gamma2 = 2.0`, the photon profile `K` evaluates as:
-
-    >>> K(1.0, 2.0, 0, 1)(0.3, 0.7)
-    0.28402541668774144
+    lambda t1,t2: complex
+        the entangled photon profile 
     
     Notes:
     ------
@@ -126,38 +112,42 @@ def K(Gamma1: float, Gamma2: float, t1: float, t2: float, GPU: bool = False) -> 
     else:
         import numpy as np
 
-    def inner(s1,s2):
-        return (s1 < s2) * np.exp( Gamma2 * s2 / 2  - Gamma1 * np.abs(s2 - s1) / 2 )
+    N = N_Psi_opt(Gamma1, Gamma2, t0, t, GPU)**.5
+    
+    def inner(t1,t2):
+        return (t1 > t0) * (t2 < t) * (t1 < t2) * np.exp( Gamma2 * t2 / 2  - Gamma1 * np.abs(t2 - t1) / 2 ) / N
     return inner
 
 
 
-def N_K(Gamma1: float, Gamma2: float, t1: float, t2: float, GPU: bool = False) -> float:
+def N_Psi_opt(Gamma1: float, Gamma2: float, t0: float, t: float, GPU: bool = False) -> float:
     r"""
-    Computes the normalization factor for the optimal entangled photon profile related to function K
+    Computes the normalization factor for the optimal entangled photon profile Psi_opt (equation 22)
 
 
     Parameters:
     -----------
     Gamma1 : float
-        The coupling constant for the first photon.
-    
+            The coupling constant to the middle state ($\Gamma_e$), which is the inverse of 
+            the lifetime of the atom in the middle state.   
+            
     Gamma2 : float
-        The coupling constant for the second photon.
+        The coupling constant to the final state ($\Gamma_f$), related to the transition from 
+        the middle state to the final state.
     
-    t1 : float
-        The initial time of the first photon.
+    t0 : float
+        The time when the coupling between the atom and the field STARTS.
     
-    t2 : float
-        The initial time of the second photon.
-
+    t : float
+        The time when the coupling between the atom and the field ENDS.
+        
     GPU : bool, optional
         If `True`, the function will use `CuPy` for GPU-accelerated computations (default is `False`).
 
     Returns:
     --------
     float
-        The normalization factor which is dependent on the time difference (`t2 - t1`) and the exponential behavior of `Gamma1` and `Gamma2`.
+        The normalization factor.
         
     Notes:
     ------
@@ -172,14 +162,14 @@ def N_K(Gamma1: float, Gamma2: float, t1: float, t2: float, GPU: bool = False) -
         import numpy as np
  
     if Gamma1 == Gamma2:
-        if np.isfinite(t2-t1):
-            return np.exp(Gamma1*t2) / Gamma1**2 * \
-                (1 - np.exp(-Gamma1*(t2-t1)) - Gamma1 * (t2-t1) * np.exp(-Gamma1*(t2-t1)) )
+        if np.isfinite(t-t0):
+            return np.exp(Gamma1*t) / Gamma1**2 * \
+                (1 - np.exp(-Gamma1*(t-t0)) - Gamma1 * (t-t0) * np.exp(-Gamma1*(t-t0)) )
         else:
-            return np.exp(Gamma1*t2) / Gamma1**2 
+            return np.exp(Gamma1*t) / Gamma1**2 
     else:
-        return np.exp(Gamma2*t2) / (Gamma1*Gamma2) * \
-            (1 - np.exp(-Gamma2*(t2-t1)) + Gamma2 / (Gamma1 - Gamma2) * ( np.exp(-Gamma1*(t2-t1)) - np.exp(-Gamma2*(t2-t1)) ) )
+        return np.exp(Gamma2*t) / (Gamma1*Gamma2) * \
+            (1 - np.exp(-Gamma2*(t-t0)) + Gamma2 / (Gamma1 - Gamma2) * ( np.exp(-Gamma1*(t-t0)) - np.exp(-Gamma2*(t-t0)) ) )
 
 
 
@@ -202,8 +192,7 @@ def optimize(objective: callable, sp_bounds: np.ndarray, p_bounds: np.ndarray, N
         The objective function to be minimized. This function should accept a set of parameters and return a scalar value.
     
     sp_bounds : np.ndarray
-        A 2D array where each row contains the lower and upper bounds for each parameter. These bounds are used to 
-        generate random starting points for the optimization.
+        A 2D array where each row contains the lower and upper bounds for starting value of each parameter.
     
     p_bounds : np.ndarray
         A tuple of parameter bounds for the optimizer to enforce during the optimization process. 
@@ -213,10 +202,8 @@ def optimize(objective: callable, sp_bounds: np.ndarray, p_bounds: np.ndarray, N
     
     Returns:
     --------
-    dict
-        A dictionary containing the best result of the optimization, with the following keys:
-        - 'fun': The value of the objective function at the optimal parameters.
-        - 'x': The optimal parameters found during the optimization.
+    OptimizeResult (see scipy.optimize.OptimizeResult for reference)
+        with added key:
         - 'number_of_fails': The number of failed optimization attempts.
     
     Example:
