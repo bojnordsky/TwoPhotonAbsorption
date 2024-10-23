@@ -3,12 +3,13 @@ from util import *
 from multiprocessing import Pool
 from time import time
 import pandas as pd
-import os
 from scipy.integrate import complex_ode, solve_ivp, quad, dblquad
-import warnings
 from typing import Tuple
+import os
+os.makedirs('DataSets',exist_ok=True)
+os.chdir('DataSets')
 
-warnings.filterwarnings("ignore")
+
 
 
 def Gaussian(t: float, Omega: float = 1, Mu: float = 0)-> float:

@@ -2,13 +2,16 @@ import matplotlib.pylab as plt
 import matplotlib.ticker as ticker
 import pandas as pd
 import numpy as np
+import os
+os.makedirs('Plots',exist_ok=True)
+
 plt.rcParams['figure.dpi'] = 300
 plt.style.use('physrev.mplstyle')
 
 
 # ########################## Gaussian Entangled pairs ################################################
-inputFile = 'P_Gamma_Entangled_withMu.csv'             
-outputFile = 'parameters_Gamma_Entangled.png'
+inputFile = './DataSets/P_Gamma_Entangled_withMu.csv'             
+outputFile = './Plots/parameters_Gamma_Entangled.png'
 title = 'Gaussian Entangled'
 
 fig, ax = plt.subplots()
@@ -26,8 +29,8 @@ plt.savefig(outputFile)
 
 
 # ########################## Gaussian Unentangled pairs ################################################
-inputFile = 'P_Gamma_Unentangled_withMu.csv'             
-outputFile = 'parameters_Gamma_Unentangled.png'
+inputFile = './DataSets/P_Gamma_Unentangled_withMu.csv'             
+outputFile = './Plots/parameters_Gamma_Unentangled.png'
 title = 'Gaussian Unentangled'
 
 fig, ax = plt.subplots()

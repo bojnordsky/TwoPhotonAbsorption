@@ -7,6 +7,9 @@ from scipy.stats import entropy
 from multiprocessing import Pool
 import pandas as pd
 import os
+os.makedirs('DataSets',exist_ok=True)
+os.chdir('DataSets')
+
 
 
 
@@ -36,7 +39,7 @@ def Schmidt_optimal_limits(Gamma1: float, Gamma2: float, n: int, sp: np.ndarray 
     Returns:
     --------
     tuple
-        A tuple containing the optimized time limits `t1`, `t2`, and the final value of the objective function.
+        A tuple containing the optimized time limits `t0`, `t`, and the final value of the objective function.
         Later one can compute the covering using this  final vale. (Covering = $1-\sqrt{f}$)
     
     Example:
@@ -69,7 +72,7 @@ def task(Gamma1: float):
         't0': t0,
         't': t,
         'f': f,
-        'time': time() - t_start
+        'CompuTime': time() - t_start
     }
     
     df = pd.DataFrame([data])

@@ -2,6 +2,9 @@ import matplotlib.pylab as plt
 import matplotlib.ticker as ticker
 import pandas as pd
 import numpy as np
+import os
+os.makedirs('Plots',exist_ok=True)
+
 plt.rcParams['figure.dpi'] = 300
 plt.style.use('physrev.mplstyle')
 
@@ -11,7 +14,7 @@ plt.style.use('physrev.mplstyle')
 ###################################### Unentangled with delay Gamma = 0.5 ##########################################
 
 fig, ax = plt.subplots()
-df = np.load('P_OmegaOmega_Uncorr_withDelay_G0.5.npz')
+df = np.load('./DataSets/P_OmegaOmega_Uncorr_withDelay_G0.5.npz')
 Omega_1 = df['Omega_1']
 Omega_2 = df['Omega_2']
 P_max = df['P_max']
@@ -27,13 +30,13 @@ ax.set_ylabel(r'$\Omega_{1}/\Gamma_f$')
 ax.set_xlabel(r'$\Omega_{2}/\Gamma_f$')
 ax.set_xticks(np.arange(0,10.1,2))
 ax.set_yticks(np.arange(0,5.1,1))
-plt.savefig('P_OmegaOmega_Unentangled_G0.5.png')
+plt.savefig('./Plots/P_OmegaOmega_Unentangled_G0.5.png')
 plt.close()
 # plt.show()
 
 # # ###################################### Unentangled with delay Gamma = 5 #############################################
 fig, ax = plt.subplots()
-df = np.load('P_OmegaOmega_Uncorr_withDelay_G5.npz')
+df = np.load('./DataSets/P_OmegaOmega_Uncorr_withDelay_G5.npz')
 Omega_1 = df['Omega_1']
 Omega_2 = df['Omega_2']
 P_max = df['P_max']
@@ -48,14 +51,14 @@ ax.set_ylabel(r'$\Omega_{1}/\Gamma_f$')
 ax.set_xlabel(r'$\Omega_{2}/\Gamma_f$')
 ax.set_xticks(np.arange(0,10.1,2))
 ax.set_yticks(np.arange(0,10.1,2))
-plt.savefig('P_OmegaOmega_Unentangled_G5.png')
+plt.savefig('./Plots/P_OmegaOmega_Unentangled_G5.png')
 plt.close()
 # plt.show()
 
 
 ################################### Entangled with delay Gamma = 0.5 ##########################################
 fig, ax = plt.subplots()
-df = np.load('P_OmegaOmega_Entangled_withDelay_G0.5.npz')
+df = np.load('./DataSets/P_OmegaOmega_Entangled_withDelay_G0.5.npz')
 Omega_1 = df['Omega_1']
 Omega_2 = df['Omega_2']
 P_max = df['P_max']
@@ -70,7 +73,7 @@ ax.set_ylabel(r'$\Omega_{+}/\Gamma_f$')
 ax.set_xlabel(r'$\Omega_{-}/\Gamma_f$')
 ax.set_xticks(np.arange(0,5.1,1))
 ax.set_yticks(np.arange(0,5.1,1))
-plt.savefig('P_OmegaOmega_Entangled_G0.5.png')
+plt.savefig('./Plots/P_OmegaOmega_Entangled_G0.5.png')
 plt.close()
 # plt.show()
 
@@ -80,7 +83,7 @@ plt.close()
 
 # # ################################## Entangled with delay Gamma = 5  #########################################
 fig, ax = plt.subplots()
-df = np.load('P_OmegaOmega_Entangled_withDelay_G5.npz')
+df = np.load('./DataSets/P_OmegaOmega_Entangled_withDelay_G5.npz')
 Omega_1 = df['Omega_1']
 Omega_2 = df['Omega_2']
 P_max = df['P_max']
@@ -95,7 +98,7 @@ ax.set_ylabel(r'$\Omega_{+}/\Gamma_f$')
 ax.set_xlabel(r'$\Omega_{-}/\Gamma_f$')
 ax.set_xticks(np.arange(0,30.1,5))
 ax.set_yticks(np.arange(0,5.1,1))
-plt.savefig('P_OmegaOmega_Entangled_G5.png')
+plt.savefig('./Plots/P_OmegaOmega_Entangled_G5.png')
 plt.close()
 # plt.show()
 

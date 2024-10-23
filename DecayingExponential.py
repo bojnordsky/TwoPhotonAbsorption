@@ -3,6 +3,10 @@ from util import *
 import pandas as pd
 from time import time
 from multiprocessing import Pool
+import os
+os.makedirs('DataSets',exist_ok=True)
+os.chdir('DataSets')
+
 
 
 

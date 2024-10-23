@@ -4,6 +4,9 @@ from multiprocessing import Pool
 from time import time
 import pandas as pd
 import os
+os.makedirs('DataSets',exist_ok=True)
+os.chdir('DataSets')
+
 
 
 def Gaussian_UnEnt(params: tuple) -> callable:

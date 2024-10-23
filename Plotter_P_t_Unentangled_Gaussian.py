@@ -1,9 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from util import P_negated
+import os
 
 plt.rcParams['figure.dpi'] = 300
 plt.style.use('physrev.mplstyle')
+
+os.makedirs('Plots',exist_ok=True)
+os.chdir('Plots')
 
 def Gaussian_Separable(params):
 	Omega1, Omega2, mu1, mu2 = params
@@ -22,8 +26,9 @@ def SecondPhoton(t):
 def P(t):
 	return -P_negated(Gamma1, Gamma2, 0,0, -np.infty, t, Gaussian_Separable)((Omega1, Omega2, mu1, mu2))
 
-# Time dependence of probability optimised with delay
 
+
+# Time dependence of probability optimised with delay
 Gamma1 = 1
 Gamma2 = 1
 Omega1 = 1.95

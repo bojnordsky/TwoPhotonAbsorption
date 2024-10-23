@@ -3,8 +3,11 @@ from util import optimize, P_negated, get_unique_filename
 from multiprocessing import Pool
 from time import time
 import pandas as pd
-import os
 from typing import Tuple
+import os
+os.makedirs('DataSets',exist_ok=True)
+os.chdir('DataSets')
+
 
 
 def Gaussian_Entangled(params: Tuple[float, float, float, float]) -> callable:

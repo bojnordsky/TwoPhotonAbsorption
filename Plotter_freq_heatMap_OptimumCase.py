@@ -2,8 +2,12 @@ import matplotlib.pylab as plt
 import matplotlib.ticker as ticker
 import pandas as pd
 import numpy as np
+import os
+
 plt.rcParams['figure.dpi'] = 300
 plt.style.use('physrev.mplstyle')
+os.makedirs('Plots',exist_ok=True)
+os.chdir('Plots')
 
 
 
@@ -129,7 +133,7 @@ Gamma_e, Gamma_f = 0.5, 1
 Mu = 0
 w_eg = 0
 w_fg = 0
-PSI = psi_w(w1, w2, Gamma_e = Gamma_e, Gamma_f = Gamma_f, w_eg = w_eg, w_fg = w_fg, Mu = Mu)
+PSI = psi_w(w1, w2, Gamma_e = Gamma_e, Gamma_f = Gamma_f, w_eg = w_eg, w_fg = w_fg)
 PSI = plt.contourf(w2,w1,PSI, origin = 'lower',levels=np.linspace(0, 0.85, 24), aspect='auto', cmap='plasma')
 plt.ylabel(r'$(\omega_1 - \omega_{eg})/\Gamma_f$')
 plt.xlabel(r'$(\omega_2 - \omega_{fe})/\Gamma_f$')
@@ -148,9 +152,9 @@ w1 = np.linspace(-8.1,8.1,1000)
 w2 = w1
 Gamma_e, Gamma_f = 5, 1
 Mu = 0
-w_01 = 0
-w_02 = 0
-PSI = psi_w(w1, w2, Gamma_e = Gamma_e, Gamma_f = Gamma_f, w_01 = w_01, w_02 = w_02, Mu = Mu)
+w_eg = 0
+w_fg = 0
+PSI = psi_w(w1, w2, Gamma_e = Gamma_e, Gamma_f = Gamma_f, w_eg = w_eg, w_fg = w_fg)
 PSI = plt.contourf(w2,w1,PSI, origin = 'lower',levels=np.linspace(0, 0.09, 24), aspect='auto', cmap='plasma')
 plt.ylabel(r'$(\omega_1 - \omega_{eg})/\Gamma_f$')
 plt.xlabel(r'$(\omega_2 - \omega_{fe})/\Gamma_f$')
@@ -176,7 +180,7 @@ t1 = np.linspace(-1,0,100)
 t2 = np.linspace(-1,0,100)
 Gamma_e, Gamma_f = 0.5, 1
 
-PSI = psi_t(t2, t1, Gamma_e = Gamma_e, Gamma_f = Gamma_f, Mu = Mu)
+PSI = psi_t(t2, t1, Gamma_e = Gamma_e, Gamma_f = Gamma_f)
 PSI = plt.contourf(t2,t1, PSI, origin = 'lower', levels=np.linspace(0,0.5, 50), aspect='auto', cmap='plasma')
 plt.ylabel(r'$t_1 \Gamma_f$')
 plt.xlabel(r'$t_2\Gamma_f$')
@@ -198,7 +202,7 @@ t2 = np.linspace(-1.0,0,1000)
 Gamma_e, Gamma_f = 5, 1
 
 
-PSI = psi_t(t2, t1, Gamma_e = Gamma_e, Gamma_f = Gamma_f, Mu = Mu)
+PSI = psi_t(t2, t1, Gamma_e = Gamma_e, Gamma_f = Gamma_f)
 PSI = plt.contourf(t2,t1, PSI, origin = 'lower', levels=np.linspace(0,5, 50), extent=[t2.min(), t2.max(), t1.min(), t1.max()], aspect='auto', cmap='plasma')
 plt.ylabel(r'$t_1 \Gamma_f$')
 plt.xlabel(r'$t_2\Gamma_f$')

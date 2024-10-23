@@ -3,9 +3,12 @@ from util import *
 from multiprocessing import Pool
 from time import time
 import pandas as pd
-import os
 from mpmath import mp, mpf, mpc, quad, exp
 from typing import Tuple
+import os
+os.makedirs('DataSets',exist_ok=True)
+os.chdir('DataSets')
+
 
 
 def Gaussian_Entangled_Without_Delay(params: Tuple[float, float, float] )-> callable:

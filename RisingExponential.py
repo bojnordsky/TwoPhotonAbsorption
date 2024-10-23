@@ -2,7 +2,10 @@ import numpy as np
 from util import *
 import pandas as pd
 
-warnings.filterwarnings("ignore")
+import os
+os.makedirs('DataSets',exist_ok=True)
+os.chdir('DataSets')
+
 
 
 def P_ExpoRising ( t: float, Omega_1: float, Omega_2: float, Gamma_1: float, Gamma_2: float)-> float:

@@ -4,6 +4,9 @@ import pandas as pd
 import numpy as np
 plt.rcParams['figure.dpi'] = 300
 plt.style.use('physrev.mplstyle')
+import os
+os.makedirs('Plots',exist_ok=True)
+
 
 
 
@@ -48,6 +51,8 @@ def plotter(inputFile: str, outputFile: str) -> None:
     This will create and save a heat map of the maximum transition probability 
     corresponding to the data in the specified CSV file.
     """
+    outputFile = './Plots/'+ outputFile
+    inputFile = './DataSets/'+ inputFile
     fig, ax = plt.subplots()
     df = pd.read_csv(inputFile)
     df= df[df['P_max']!='P_max'].astype('float')

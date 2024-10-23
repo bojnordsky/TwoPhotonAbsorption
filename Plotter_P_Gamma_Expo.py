@@ -2,9 +2,12 @@ import matplotlib.pylab as plt
 import matplotlib.ticker as ticker
 import pandas as pd
 import numpy as np
+from typing import List
+import os
+os.makedirs('Plots',exist_ok=True)
+
 plt.rcParams['figure.dpi'] = 300
 plt.style.use('physrev.mplstyle')
-from typing import List
 
 
 
@@ -50,7 +53,9 @@ def plotter (inputFile: List[str], outputFile:str, title:str = '', label: List[s
                  title='Exponentials', 
                  label=['Exponential rising', 'Exponential decaying'])
      """
-
+    
+    outputFile = './Plots/'+ outputFile
+    inputFile = ['./DataSets/'+ inputFile for inputFile in inputFile]
     fig, ax = plt.subplots()
     df1 = pd.read_csv(inputFile[0])[1:]
     df2 = pd.read_csv(inputFile[1])

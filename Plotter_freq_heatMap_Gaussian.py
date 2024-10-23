@@ -4,6 +4,9 @@ import pandas as pd
 import numpy as np
 plt.rcParams['figure.dpi'] = 300
 plt.style.use('physrev.mplstyle')
+import os
+os.makedirs('Plots',exist_ok=True)
+os.chdir('Plots')
 
 
 def psi_w(w1: np.ndarray, w2: np.ndarray, OmegaP: float = 1, OmegaM: float = 1, Mu: float = 0, w_01: float = 0, w_02: float = 0)-> np.ndarray:           
@@ -57,8 +60,6 @@ def psi_w(w1: np.ndarray, w2: np.ndarray, OmegaP: float = 1, OmegaM: float = 1, 
     >>> amplitude = psi_w(w1, w2, OmegaP=1, OmegaM=1, Mu=0, w_01=0, w_02=0)
     >>> print(amplitude.shape)  # Output: (100, 100)
     """
-    w_01 = kwargs.get('w_01', 0)
-    w_02 = kwargs.get('w_02', 0)
     w1_len = len(w1)
     w2_len = len(w2)
     w1, w2 = np.meshgrid(w1, w2)

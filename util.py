@@ -58,7 +58,7 @@ def P_negated(Gamma1: float, Gamma2: float, Delta1: complex, Delta2: complex, t0
     
     """
     def inner(params):
-        intg = quad( lambda s2: np.exp(-(1j*Delta2+Gamma2/2)*(t2 - s2))*quad( lambda s1: np.exp(-Gamma1*(s2- s1)/2 + 1j*Delta1*s1)*psi(params)(s2,s1), t0, s2,epsabs=tol, complex_func=True )[0] ,t0, t,epsabs=tol, limit = limit, complex_func=True)[0]
+        intg = quad( lambda s2: np.exp(-(1j*Delta2+Gamma2/2)*(t - s2))*quad( lambda s1: np.exp(-Gamma1*(s2- s1)/2 + 1j*Delta1*s1)*psi(params)(s2,s1), t0, s2,epsabs=tol, complex_func=True )[0] ,t0, t,epsabs=tol, limit = limit, complex_func=True)[0]
         return - Gamma1 * Gamma2 * np.abs(intg)**2
     return inner
 
