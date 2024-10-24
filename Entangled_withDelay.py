@@ -5,6 +5,7 @@ from time import time
 import pandas as pd
 from typing import Tuple
 import os
+
 os.makedirs('DataSets',exist_ok=True)
 os.chdir('DataSets')
 
@@ -13,6 +14,11 @@ os.chdir('DataSets')
 def Gaussian_Entangled(params: Tuple[float, float, float, float]) -> callable:
     r"""
     Generates a function representing the time-domain profile of entangled Gaussian photon pairs WITH delay.
+    
+    .. math::
+        $\Psi(t_2,t_1) = \sqrt{\frac{\Omega_{+}\Omega_{-}}{2\pi}}
+                        e^{-\frac{\Omega_{+}^2}{8}\left(t_2-\mu+t_1\right)^2
+                        -\frac{\Omega_{-}^2}{8}\left(t_2-\mu-t_1\right)^2}$
     
     This function entangled photon pairs with a Gaussian profile, where the shape of each photon's 
     wave packet is controlled by the parameters Omega1 ($\Omega_+$) and Omega2 ($\Omega_+$). 
@@ -30,16 +36,10 @@ def Gaussian_Entangled(params: Tuple[float, float, float, float]) -> callable:
     Returns:
     --------
     function
-        A callable function `inner(t1, t2)` that takes two time arguments `t1` and `t2` representing the time positions 
-        of the first and second photon, respectively. It computes the entangled photon pair profile for the given times.
+        A callable function that takes two time arguments `t1` and `t2` representing the coupling time  
+        of the first and second photon with the atom, respectively. It computes the entangled photon pair profile for the given times.
     
-    The returned function computes the following expression:
-    
-    .. math::
-        profile(t1, t2) = \sqrt{\frac{\Omega_+ \cdot \Omega_-}{2\pi}} \cdot 
-                          \exp\left(-\frac{\Omega_+^2 \cdot (t1 + t2 - \mu_+)^2}{8} - 
-                                    \frac{\Omega_-^2 \cdot (t1 - t2 + \mu_-)}{8}\right)
-    
+     
     Example:
     --------
     >>> params = (2.0, 3.0, 0.5, -0.5)  # Omega1 = 2.0, Omega2 = 3.0, Mu_plus = 0.5, Mu_minus = -0.5
@@ -54,21 +54,7 @@ def Gaussian_Entangled(params: Tuple[float, float, float, float]) -> callable:
     - The parameters Mu_plus and Mu_minus adjust the overall timing and relative delays between the two photons.
     """
     Omega1, Omega2, Mu_plus, Mu_minus = params
-    def inner(t1: float, t2: float):
-        r"""
-        Computes the entangled photon pair profile at specific time instances t1 and t2.
-        Parameters:
-        -----------
-        t1 : float
-            Time instance of the first photon.
-        t2 : float
-            Time instance of the second photon.
-        Returns:
-        --------
-        float
-            The entangled photon pair profile evaluated at t1 and t2.
-        """
-        
+    def inner(t1: float, t2: float):       
         return np.sqrt(Omega1 * Omega2 / (2 * np.pi)) * np.exp(-Omega1 ** 2 * (t1 + t2 - Mu_plus) ** 2 / 8 - Omega2 ** 2 * (t1 - t2 + Mu_minus) ** 2 / 8)
     return inner
 

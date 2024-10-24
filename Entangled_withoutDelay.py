@@ -14,10 +14,16 @@ os.chdir('DataSets')
 def Gaussian_Entangled_Without_Delay(params: Tuple[float, float, float] )-> callable:
     r"""
     Generates a function representing the time-domain profile of Entangled Gaussian Photon Pairs (EPPs) 
-    WITHOUT any temporal delay between the two photons.
+    WITHOUT any temporal delay between the two photons.(Equation 41)
+
+    .. math::
+    $\Psi(t_2,t_1) = \sqrt{\frac{\Omega_{+}\Omega_{-}}{2\pi}}
+                    e^{-\frac{\Omega_{+}^2}{8}\left(t_2-\mu+t_1\right)^2
+                    -\frac{\Omega_{-}^2}{8}\left(t_2-\mu-t_1\right)^2}$
+
     
-    This function models entangled photon pairs with a Gaussian profile, where the shape of each photon's wave packet 
-    is controlled by the parameters Omega1 (for the first photon) and Omega2 (for the second photon). The timing 
+    This function entangled photon pairs with a Gaussian profile, where the shape of each photon's 
+    wave packet is controlled by the parameters Omega1 ($\Omega_+$) and Omega2 ($\Omega_+$).  The timing 
     correlation is captured by the Mu_plus parameter.
     
     Parameters:
@@ -31,27 +37,8 @@ def Gaussian_Entangled_Without_Delay(params: Tuple[float, float, float] )-> call
     Returns:
     --------
     function
-        A callable function `inner(t1, t2)` that takes two time arguments `t1` and `t2` representing the time positions 
-        of the first and second photon, respectively. It computes the EPPs profile for the given times.
-    
-    The returned function computes the following expression:
-    
-    .. math::
-        profile(t1, t2) = \sqrt{\frac{\Omega_+  \Omega_-}{2\pi}}  
-                          \exp\left(-\frac{\Omega_+^2  (t1 + t2 - \mu_+)^2}{8} - 
-                                    \frac{\Omega_-^2  (t1 - t2)^2}{8}\right)
-    
-    Example:
-    --------
-    >>> params = (2.0, 3.0, 0.0)  # Omega1 = 2.0, Omega2 = 3.0, Mu_plus = 0.0
-    >>> profile_func = Gaussian_Entangled_Without_Delay(params)
-    >>> profile_value = profile_func(0.5, -0.5)
-    >>> print(profile_value)
-    0.027500369303267484
-    
-    Notes:
-    ------
-    - Ensure that both Omega1 and Omega2 are greater than 0 to avoid any mathematical inconsistencies in the Gaussian profile.
+        A callable function that takes two time arguments `t1` and `t2`. It computes the EPPs profile for the given times.
+
     """
     Omega1, Omega2, Mu_plus = params
     def inner(t1:float,t2:float) -> float:

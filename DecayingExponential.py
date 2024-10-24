@@ -37,11 +37,12 @@ def P_ExpoDecay ( t: float, Omega_1: float, Omega_2: float, Mu: float, Gamma_1: 
         The coupling constant to the final state ($\Gamma_f$), related to the transition from 
         the middle state to the final state.
         
-    Delta_1 : float or complex, optional
-        Detuning of the middle level (default is 0).
-    Delta_2 : float or complex, optional
-        Detuning of the excieted level (default is 0).
-
+    Delta_1 : float,  optional (default=0)
+        The detuning of the first photon field from the atom
+        
+    Delta_2 : float, optional (default is 0)
+        The detuning of the second photon field from the atom
+        
     Returns:
     -------
     P : float

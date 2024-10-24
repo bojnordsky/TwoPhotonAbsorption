@@ -63,10 +63,10 @@ def P_coherent(Omega_1: float, Omega_2: float,Mu: float = 0, Gamma_1: float = 1,
     Parameters:
     -----------
     Omega_1 : float
-        The spectral widths of the Gaussian profiles for first photon
+        The spectral widths of the Gaussian profiles for first field
     
     Omega_2 : float
-        The spectral widths of the Gaussian profiles for second photon
+        The spectral widths of the Gaussian profiles for second field
         
     Mu : float, optional (default=0)
         Time delay between the maxima of the two pulses.
