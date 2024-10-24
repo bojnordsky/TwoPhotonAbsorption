@@ -13,7 +13,10 @@ os.chdir('DataSets')
 
 def Gaussian(t: float, Omega: float = 1, Mu: float = 0)-> float:
     r"""
-    Returns a Gaussian function representing a coherent photon profile.
+    Returns a Gaussian function representing a coherent photon profile.(Same as Equation 39)
+
+    .. math::
+            $Profile(t)= \left(\frac{\Omega_{1}^2}{2\pi}\right)^{1/4}\exp\left(-\frac{\Omega_1^2 t^2}{4}\right)$
 
     This function computes a Gaussian profile for a given time `t`, representing 
     a coherent photon state. The profile is determined by the parameters `Omega` 
@@ -35,10 +38,6 @@ def Gaussian(t: float, Omega: float = 1, Mu: float = 0)-> float:
     float
         The value of the Gaussian function at the given time `t`.
 
-    Notes:
-    ------
-    The function represents a coherent photon profile in terms of a Gaussian distribution.
-
     Example:
     --------
     >>> Gaussian(0.5)
@@ -55,7 +54,7 @@ def Gaussian(t: float, Omega: float = 1, Mu: float = 0)-> float:
 def P_coherent(Omega_1: float, Omega_2: float,Mu: float = 0, Gamma_1: float = 1, Gamma_2: float = 1 
                , Delta_1: float = 0, Delta_2: float = 0, n_1: int = 1, n_2: int = 1, nBins: int = 10000) -> float:
     r"""
-    Computes the probability of occupation for a three-level atom driven by two coherent fields.
+    Computes the probability of occupation for a three-level atom driven by two coherent fields. (Equation E1-E6)
 
     This function integrates the dynamics of a three-level atomic system driven by two coherent fields 
     with frequencies `Omega_1` and `Omega_2`. 
