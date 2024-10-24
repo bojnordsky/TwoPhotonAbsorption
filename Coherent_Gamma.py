@@ -14,7 +14,7 @@ os.chdir('DataSets')
 
 def Gaussian(t: float, Omega: float = 1, Mu: float = 0)-> float:
     r"""
-    Returns a Gaussian function representing a coherent photon profile.
+    Returns a Gaussian function representing a coherent photon profile.(Same as Equation 39)
 
     .. math::
             $Profile(t)= \left(\frac{\Omega_{1}^2}{2\pi}\right)^{1/4}\exp\left(-\frac{\Omega_1^2 t^2}{4}\right)$
