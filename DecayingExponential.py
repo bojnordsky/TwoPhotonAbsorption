@@ -13,7 +13,15 @@ os.chdir('DataSets')
 def P_ExpoDecay ( t: float, Omega_1: float, Omega_2: float, Mu: float, Gamma_1: float, Gamma_2: float, Delta_1: float = 0, Delta_2: float = 0)->float:
     r"""
     Calculates the probability of transitioning from the ground state to the excited state in a three-level system 
-    driven by exponentially decaying pulses. The analytical solution corresponds to equation C9 of the referenced article.
+    driven by exponentially decaying pulses. The analytical solution corresponds to Equation C9-C12 of the referenced article.
+
+    .. math::
+            $P_{f}(t)=\frac{\Gamma_e\Gamma_f\Omega_1\Omega_2 e^{-\Gamma_ft+\Omega_2t_s}}
+                    {|abc|^2}\left|b(e^{ct}-e^{ct_s})-c(e^{bt}-e^{bt_s})\right|^2 $
+        where:
+            a = i\Delta_1+\frac{1}{2}(\Gamma_e-\Omega_1)\\
+            b = i\Delta_2+\frac{1}{2}(\Gamma_f-\Gamma_e-\Omega_2)\\
+            c = i(\Delta_1+\Delta_2)+\frac{1}{2}(\Gamma_f-\Omega_1-\Omega_2)   
 
     Parameters:
     ----------
@@ -21,10 +29,10 @@ def P_ExpoDecay ( t: float, Omega_1: float, Omega_2: float, Mu: float, Gamma_1: 
         Time variable for the exponential decay.
         
     Omega_1 : float
-        The profile characteristic for first photon (Omega_1 > 0)
+        The decay rate of the first photon (Omega_1 > 0)
         
     Omega_2 : float
-        The profile characteristic for second photon (Omega_2 > 0)
+        The decay rate of the second photon (Omega_2 > 0)
         
     Mu : float
         Time delay between the starting point of two exponential pulses.

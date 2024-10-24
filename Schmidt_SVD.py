@@ -132,15 +132,15 @@ def task(params: Tuple[float, float, float, float, int])-> None:
     res = pd.DataFrame([res])
     res.to_csv(fileName, mode='a', header=True, index=False)
     return 
-
+    
+Parameters = pd.read_csv('Schmidt_Optimized_variables.csv')
 fileName = get_unique_filename('Schmidt_results.csv')
-n = 2**13
-Gamma2 = 1
 
-# Parameters = pd.read_csv('Optimized_Schmit_vars_all.csv')
-Parameters = pd.read_csv('Optimized_Schmdit_variables.csv')
+GPU = False
+n = 2**14
 gpu_ids = [0, 1] * (len(Parameters) // 2) + [1] * (len(Parameters) % 2)  # Alternate between 1 and 2
 
+Gamma2 = 1
 p = Pool(2)               # Run on two GPUs simultaneously 
 p.map(task, zip(Parameters['Gamma1'], Parameters['t0'], Parameters['t'] , Parameters['f'], gpu_ids ))
 df = pd.read_csv(fileName)

@@ -10,7 +10,11 @@ os.chdir('DataSets')
 
 def P_ExpoRising ( t: float, Omega_1: float, Omega_2: float, Gamma_1: float, Gamma_2: float)-> float:
     r"""
-    Computes the transition probability for a three-level atomic system driven by two rising exponential pulses.
+    Computes the transition probability for a three-level atomic system driven by two rising exponential pulses.(Equation C3)
+
+    .. math::
+        $P_{f}(t) = \frac{16\Gamma_{e}\Gamma_{f}\Omega_1\Omega_2 e^{(\Omega_1+\Omega_2)t}}
+                    {(4\Delta_1^2+(\Omega_{1}+\Gamma_{e})^2)(4(\Delta_1+\Delta_2)^2+(\Omega_1+\Omega_2+\Gamma_f)^2)}$
 
     This function analytically evaluates the transition probability from the ground state to the excited state
     in a three-level system when driven by two rising exponential pulses. The formula corresponds to equation C3
@@ -22,11 +26,11 @@ def P_ExpoRising ( t: float, Omega_1: float, Omega_2: float, Gamma_1: float, Gam
         Time variable at which the probability is evaluated.
     
     Omega_1 : float
-        Represents the shape of the first photon (should be greater than 0).
-    
+        The rising rate of the first photon (Omega_1 > 0)
+        
     Omega_2 : float
-        Represents the shape of the second photon (should be greater than 0).
-    
+        The rising rate of the second photon (Omega_2 > 0)
+     
     Gamma_1 : float
         The coupling constant to the middle state ($\Gamma_e$), which is the inverse of
         the lifetime of the atom in the middle state.
@@ -56,7 +60,12 @@ def P_ExpoRising ( t: float, Omega_1: float, Omega_2: float, Gamma_1: float, Gam
 
 def P_max_ExpoRising (Gamma_1: float, Gamma_2: float = 1)->float:
     r"""
-    Computes the maximum transition probability for a three-level system driven by rising exponential pulses.
+    Computes the maximum transition probability for a three-level system driven by rising exponential pulses.(Equation C4)
+
+    .. math::
+        $P_{f}^{max}= \frac{64 \frac{\Gamma_e}{\Gamma_f} \left(\sqrt{1+8\frac{\Gamma_e}{\Gamma_f}}-1\right)}
+                        {\left(\frac{4\Gamma_e}{\Gamma_f}+\sqrt{1+\frac{8\Gamma_e}{\Gamma_f}}-
+                        1\right)^2\left(3+\sqrt{1+\frac{8\Gamma_e}{\Gamma_f}}\right)}$
 
     This function calculates the maximum transition probability from the ground state to the excited state 
     in a three-level system driven by rising exponential pulses, as described in equation C4 of the article.
@@ -74,7 +83,7 @@ def P_max_ExpoRising (Gamma_1: float, Gamma_2: float = 1)->float:
     Returns:
     --------
     float
-        The maximum transition probability for the given coupling constants `Gamma_1` and `Gamma_2`.
+        The maximum transition probability for the given `Gamma_1` and `Gamma_2`.
 
     
     Example:

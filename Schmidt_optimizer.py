@@ -72,7 +72,7 @@ def task(Gamma1: float):
         't0': t0,
         't': t,
         'f': f,
-        'CompuTime': time() - t_start
+        'CompuTime_opt': time() - t_start
     }
     
     df = pd.DataFrame([data])
@@ -81,7 +81,7 @@ def task(Gamma1: float):
     else:
         df.to_csv(fileName, mode='w', header=True, index=False)
 
-fileName = 'Optimized_Schmdit_variables.csv'
+fileName = 'Schmidt_Optimized_variables.csv'
 
 n = 2**15
 Gamma2 = 1

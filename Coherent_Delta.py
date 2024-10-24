@@ -28,10 +28,10 @@ def Gaussian(t: float, Omega: float = 1, Mu: float = 0)-> float:
         The time at which to evaluate the Gaussian function.
     
     Omega : float, optional (default=1)
-            The width of the Gaussian photon profile.
+            Inverses of widths (square roots of variances) of the first photon. (should be greater than 0).
             
     Mu : float, optional (default=0)
-            The mean value or central time of the photon profile.
+            The mean value the photon profile.
 
     Returns:
     --------
@@ -62,13 +62,13 @@ def P_coherent(Omega_1: float, Omega_2: float,Mu: float = 0, Gamma_1: float = 1,
     Parameters:
     -----------
     Omega_1 : float
-        The spectral widths of the Gaussian profiles for first field
+        Inverses of widths (square roots of variances) of the first photon (should be greater than 0).
     
     Omega_2 : float
-        The spectral widths of the Gaussian profiles for second field
+        Inverses of widths (square roots of variances) of the second photon (should be greater than 0).
         
     Mu : float, optional (default=0)
-        Time delay between the maxima of the two pulses.
+        The mean value the photon profile.
     
     Gamma_1 : float, optional (default=1)
         The coupling constant to the middle state ($\Gamma_e$), which is the inverse of
@@ -98,9 +98,6 @@ def P_coherent(Omega_1: float, Omega_2: float,Mu: float = 0, Gamma_1: float = 1,
     float
         The negative maximum value of the population of the ground state (Rho_ff) at the final time.
 
-    Notes:
-    ------
-    The function uses the `complex_ode` solver from a suitable ODE solver library to numerically integrate the equations.
 
     Example:
     --------
