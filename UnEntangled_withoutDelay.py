@@ -13,7 +13,7 @@ os.chdir('DataSets')
 
 def Gaussian_UnEnt(params: Tuple[float, float, float])-> callable:
     r"""
-    Generates a callable function representing the time-domain profile of Unentangled Gaussian Photon Pairs  
+    Generates a callable function representing the Gussian time-domain profile of Unentangled Photon Pairs  
     without any temporal delay between the two photons.
     
     .. math::
@@ -28,16 +28,14 @@ def Gaussian_UnEnt(params: Tuple[float, float, float])-> callable:
     Parameters:
     -----------
     params : tuple of floats
-        A tuple containing three elements:
-        - Omega1 (float): Represents the shape of the first photon (should be greater than 0).
-        - Omega2 (float): Represents the shape of the second photon (should be greater than 0).
-        - Mu1 (float): 
+        A tuple of parameters of Gaussian distribution (Omega1, Omega2, Mu1):
+        - Omega1, Omega2 (float): Inverses of widths (square roots of variances) of the first and the second photon respectively (should be greater than 0).
+        - Mu1 (float): mean value of t1 (and t2)
     
     Returns:
     --------
     function
-        A callable function that takes two time arguments `t1` and `t2` representing the coupling time  
-        of the first and second photon with the atom, respectively. 
+        A two-argument Gaussian time-domain profile of Unentangled Photon Pairs 
     
     
     Example:
