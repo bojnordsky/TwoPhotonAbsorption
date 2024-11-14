@@ -78,12 +78,12 @@ ax[2, 1].set_xticks(np.arange(-3,4,3))
 ax[2, 1].set_yticklabels([])
 ax[2, 1].set_xlabel(r'$\Delta_2/\Gamma_f$', labelpad=5, fontsize=13)
 
-ax[0, 0].text(0.15, 0.8, '(a)', transform=ax[0, 0].transAxes, fontsize=10, verticalalignment='bottom', horizontalalignment='right', color = 'white')
-ax[0, 1].text(0.15, 0.8, '(b)', transform=ax[0, 1].transAxes, fontsize=10, verticalalignment='bottom', horizontalalignment='right', color = 'white')
-ax[1, 0].text(0.15, 0.8, '(c)', transform=ax[1, 0].transAxes, fontsize=10, verticalalignment='bottom', horizontalalignment='right', color = 'white')
-ax[1, 1].text(0.15, 0.8, '(d)', transform=ax[1, 1].transAxes, fontsize=10, verticalalignment='bottom', horizontalalignment='right', color = 'white')
-ax[2, 0].text(0.15, 0.8, '(e)', transform=ax[2, 0].transAxes, fontsize=10, verticalalignment='bottom', horizontalalignment='right', color = 'white')
-ax[2, 1].text(0.15, 0.8, '(f)', transform=ax[2, 1].transAxes, fontsize=10, verticalalignment='bottom', horizontalalignment='right', color = 'white')
+ax[0, 0].text(0.15, 0.8, '(a)', transform=ax[0, 0].transAxes, fontsize=13, verticalalignment='bottom', horizontalalignment='right', color = 'white')
+ax[0, 1].text(0.15, 0.8, '(b)', transform=ax[0, 1].transAxes, fontsize=13, verticalalignment='bottom', horizontalalignment='right', color = 'white')
+ax[1, 0].text(0.15, 0.8, '(c)', transform=ax[1, 0].transAxes, fontsize=13, verticalalignment='bottom', horizontalalignment='right', color = 'white')
+ax[1, 1].text(0.15, 0.8, '(d)', transform=ax[1, 1].transAxes, fontsize=13, verticalalignment='bottom', horizontalalignment='right', color = 'white')
+ax[2, 0].text(0.15, 0.8, '(e)', transform=ax[2, 0].transAxes, fontsize=13, verticalalignment='bottom', horizontalalignment='right', color = 'white')
+ax[2, 1].text(0.15, 0.8, '(f)', transform=ax[2, 1].transAxes, fontsize=13, verticalalignment='bottom', horizontalalignment='right', color = 'white')
 
 scale = 0.65
 cbar1 = fig.colorbar(contours[0], ax=ax[0, :], orientation="vertical", fraction=0.15, pad=0.02, shrink = 0.95)
