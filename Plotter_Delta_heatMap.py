@@ -1,122 +1,113 @@
-import matplotlib.pylab as plt
-import matplotlib.ticker as ticker
-import pandas as pd
+import matplotlib.pyplot as plt
 import numpy as np
-plt.rcParams['figure.dpi'] = 300
-plt.style.use('physrev.mplstyle')
+import pandas as pd
 import os
 os.makedirs('Plots',exist_ok=True)
 
+plt.rcParams['figure.dpi'] = 300
+plt.style.use('physrev.mplstyle')
 
+fig, ax = plt.subplots(3, 2,figsize = (5,5))
+fig.subplots_adjust(hspace=0.05, wspace=0.05)
 
-
-
-
-def plotter(inputFile: str, outputFile: str) -> None:
-    r"""
-    Generates a heat map of the maximum transition probability (\(P_{\text{max}}\)) 
-    as a function of the detunings \(\Delta_1\) and \(\Delta_2\).
-
-    This function reads data from a specified input CSV file, processes it to extract the 
-    transition probabilities associated with the given detuning values, and then creates 
-    a heat map visualization. The heat map displays how \(P_{\text{max}}\) varies with 
-    respect to \(\Delta_1\) and \(\Delta_2\), providing insights into the optimum conditions 
-    for maximizing transition probabilities in a three-level system.
-
-    Parameters:
-    -----------
-    inputFile : str
-        The path to the input CSV file containing the transition probability data.
-        The CSV file is expected to contain columns for `Delta_1`, `Delta_2`, and `P_max`.
-
-    outputFile : str
-        The path where the generated heat map image will be saved. The image will be 
-        saved in PNG format.
-
-    Returns:
-    --------
-    None
-        This function does not return any value. It generates and saves a heat map plot 
-        to the specified output file.
-
-    Notes:
-    ------
-    - The function uses matplotlib for plotting and pandas for data manipulation.
-    - The color map used for the heat map is set to 'plasma', which provides a visually 
-      appealing gradient representation of the transition probabilities.
-
-    Example:
-    --------
-    >>> plotter('P_Del_Coherent_G0.5.csv', 'P_Del_Coherent_G0.5_optimum.png')
-    This will create and save a heat map of the maximum transition probability 
-    corresponding to the data in the specified CSV file.
-    """
-    outputFile = './Plots/'+ outputFile
-    inputFile = './DataSets/'+ inputFile
-    fig, ax = plt.subplots()
+def plot_contour(ax, inputFile, outputFiel = '', scale = 0.65):
     df = pd.read_csv(inputFile)
-    df= df[df['P_max']!='P_max'].astype('float')
-    df.sort_values(by=['Delta_1','Delta_2'],ascending = False,inplace = True)
-    df.reset_index(drop=True,inplace = True)
+    df = df[df['P_max'] != 'P_max'].astype('float')
+    df.sort_values(by=['Delta_1', 'Delta_2'], ascending=False, inplace=True)
+    df.reset_index(drop=True, inplace=True)
     Delta1 = df['Delta_1'].values
     Delta2 = df['Delta_2'].values
     P = df['P_max'].values
-    
     Delta1_unique = np.unique(Delta1)
     Delta2_unique = np.unique(Delta2)
-    
     P_grid = P.reshape(len(Delta1_unique), len(Delta2_unique))
-    
-    HeatMap = ax.contourf(Delta1_unique, Delta2_unique, P_grid, origin = 'lower',levels=np.linspace(0,scale, 50), aspect='auto', cmap='plasma')
-    # HeatMap = ax.contour(Delta1_unique, Delta2_unique, P_grid, origin = 'lower',levels=np.linspace(0,scale, 10), aspect='auto', cmap='plasma')
-    cbar = plt.colorbar(HeatMap)
-    cbar.set_label(r'$P_f^{max}$')
-    cbar.set_ticks(np.arange(0,scale,0.1))
-    cbar.set_ticklabels(np.round(np.arange(0,scale,0.1),2))
-    ax.set_xlabel(r'$\Delta_2/\Gamma_f$')
-    ax.set_ylabel(r'$\Delta_1/\Gamma_f$')
-#    ax.set_title(f'{outputFile.split('_')[2]} optimum $\Gamma_e = {G}$ ' )
-    plt.savefig(outputFile)
+    return ax.contourf(Delta1_unique, Delta2_unique, P_grid, origin='lower',
+                       levels=np.linspace(0, scale, 50), cmap='plasma')
 
 
+contours = []
 
-########################## Unentangled pairs ################################################
-G = 5
-scale = 0.61
+G = 0.5
 inputFile = f'P_Del_Unentangled_G{G}.csv'
-outputFile = f'P_Del_Unentangled_G{G}_optimum.png'
-plotter(inputFile, outputFile)
-
-G = 0.5
-scale = 0.61
+inputFile = './DataSets/' + inputFile
+contours.append(plot_contour(ax[0, 0], inputFile, scale = 0.65))
+G = 5
 inputFile = f'P_Del_Unentangled_G{G}.csv'
-outputFile = f'P_Del_Unentangled_G{G}_optimum.png'
-plotter(inputFile, outputFile)
-
-
-########################## Entangled pairs ################################################
+inputFile = './DataSets/' + inputFile
+contours.append(plot_contour(ax[0, 1], inputFile, scale = 0.65))
 G = 0.5
-scale = 0.65
 inputFile = f'P_Del_Entantgled_G{G}.csv'
-outputFile = f'P_Del_Entantgled_G{G}_optimum.png'
-plotter(inputFile, outputFile)
-
+inputFile = './DataSets/' + inputFile
+contours.append(plot_contour(ax[1, 0], inputFile, scale = 0.65))
 G = 5
-scale = 0.65
 inputFile = f'P_Del_Entantgled_G{G}.csv'
-outputFile = f'P_Del_Entantgled_G{G}_optimum.png'
-plotter(inputFile, outputFile)
+inputFile = './DataSets/' + inputFile
+contours.append(plot_contour(ax[1, 1], inputFile, scale = 0.65))
 
-
-########################## Coherent pairs ################################################
 G = 0.5
-scale = 0.25
 inputFile = f'P_Del_Coherent_G{G}.csv'
-outputFile = f'P_Del_Coherent_G{G}_optimum.png'
-plotter(inputFile, outputFile)
-
+inputFile = './DataSets/' + inputFile
+contours.append(plot_contour(ax[2, 0], inputFile, scale = 0.25))
 G = 5
-scale = 0.25
 inputFile = f'P_Del_Coherent_G{G}.csv'
-outputFile = f'P_Del_Coherent_G{G}_optimum.png'
-plotter(inputFile, outputFile)
+inputFile = './DataSets/' + inputFile
+contours.append(plot_contour(ax[2, 1], inputFile, scale = 0.25))
+
+
+ax[0, 0].set_ylabel(r'$\Delta_1/\Gamma_f$', labelpad=-3, fontsize=10)
+ax[0, 0].set_xticklabels([])
+ax[0, 0].set_yticks(np.arange(-3,4,3))
+
+ax[0, 1].set_xticklabels([])
+ax[0, 1].set_yticklabels([])
+
+ax[1, 0].set_xlabel(r'$\Delta_2/\Gamma_f$')
+ax[1, 0].set_xticklabels([])
+ax[1, 0].set_yticks(np.arange(-3,4,3))
+ax[1, 0].set_ylabel(r'$\Delta_1/\Gamma_f$', labelpad=-3, fontsize=10)
+
+ax[1, 1].set_yticklabels([])
+ax[1, 1].set_xticklabels([])
+
+ax[2, 0].set_xticks(np.arange(-3,4,3))
+ax[2, 0].set_yticks(np.arange(-3,4,3))
+ax[2, 0].set_xlabel(r'$\Delta_2/\Gamma_f$', labelpad=5, fontsize=10)
+ax[2, 0].set_ylabel(r'$\Delta_1/\Gamma_f$', labelpad=-3, fontsize=10)
+
+ax[2, 1].set_xticks(np.arange(-3,4,3))
+ax[2, 1].set_yticklabels([])
+ax[2, 1].set_xlabel(r'$\Delta_2/\Gamma_f$', labelpad=5, fontsize=10)
+
+ax[0, 0].text(0.15, 0.8, '(a)', transform=ax[0, 0].transAxes, fontsize=10, verticalalignment='bottom', horizontalalignment='right', color = 'white')
+ax[0, 1].text(0.15, 0.8, '(b)', transform=ax[0, 1].transAxes, fontsize=10, verticalalignment='bottom', horizontalalignment='right', color = 'white')
+ax[1, 0].text(0.15, 0.8, '(c)', transform=ax[1, 0].transAxes, fontsize=10, verticalalignment='bottom', horizontalalignment='right', color = 'white')
+ax[1, 1].text(0.15, 0.8, '(d)', transform=ax[1, 1].transAxes, fontsize=10, verticalalignment='bottom', horizontalalignment='right', color = 'white')
+ax[2, 0].text(0.15, 0.8, '(e)', transform=ax[2, 0].transAxes, fontsize=10, verticalalignment='bottom', horizontalalignment='right', color = 'white')
+ax[2, 1].text(0.15, 0.8, '(f)', transform=ax[2, 1].transAxes, fontsize=10, verticalalignment='bottom', horizontalalignment='right', color = 'white')
+
+scale = 0.65
+cbar1 = fig.colorbar(contours[0], ax=ax[0, :], orientation="vertical", fraction=0.15, pad=0.02, shrink = 0.95)
+cbar1.set_label(r'$P_f^{max}$', labelpad=1)
+cbar1.set_ticks(np.arange(0,scale,0.2))
+cbar1.set_ticklabels(np.round(np.arange(0,scale,0.2),2))
+cbar2 = fig.colorbar(contours[2], ax=ax[1, :], orientation="vertical", fraction=0.15, pad=0.02, shrink = 0.95)
+cbar2.set_label(r'$P_f^{max}$', labelpad=1)
+cbar2.set_ticks(np.arange(0,scale,0.2))
+cbar2.set_ticklabels(np.round(np.arange(0,scale,0.2),2))
+
+scale = 0.25
+cbar2 = fig.colorbar(contours[4], ax=ax[2, :], orientation="vertical", fraction=0.15, pad=0.02, shrink = 0.95)
+cbar2.set_label(r'$P_f^{max}$', labelpad=1)
+cbar2.set_ticks(np.arange(0,scale,0.1))
+cbar2.set_ticklabels(np.round(np.arange(0,scale,0.1),2))
+
+
+outputFile = './Plots/'+ 'P_Del_Optimum_v1.png'
+plt.savefig(outputFile)
+plt.show()
+
+
+
+
+
+
