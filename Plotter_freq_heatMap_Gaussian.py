@@ -194,10 +194,10 @@ ax[1,1].tick_params(axis='both', which = 'both', direction = 'out')
 cbar.set_label(r'$|\psi|^2$', labelpad=3, fontsize=13)
 
 
-ax[0, 0].text(0.15, 0.8, '(a)', transform=ax[0, 0].transAxes, fontsize=10, verticalalignment='bottom', horizontalalignment='right', color = 'white')
-ax[0, 1].text(0.15, 0.8, '(b)', transform=ax[0, 1].transAxes, fontsize=10, verticalalignment='bottom', horizontalalignment='right', color = 'white')
-ax[1, 0].text(0.15, 0.8, '(c)', transform=ax[1, 0].transAxes, fontsize=10, verticalalignment='bottom', horizontalalignment='right', color = 'white')
-ax[1, 1].text(0.15, 0.8, '(d)', transform=ax[1, 1].transAxes, fontsize=10, verticalalignment='bottom', horizontalalignment='right', color = 'white')
+ax[0, 0].text(0.15, 0.8, '(a)', transform=ax[0, 0].transAxes, fontsize=13, verticalalignment='bottom', horizontalalignment='right', color = 'white')
+ax[0, 1].text(0.15, 0.8, '(b)', transform=ax[0, 1].transAxes, fontsize=13, verticalalignment='bottom', horizontalalignment='right', color = 'white')
+ax[1, 0].text(0.15, 0.8, '(c)', transform=ax[1, 0].transAxes, fontsize=13, verticalalignment='bottom', horizontalalignment='right', color = 'white')
+ax[1, 1].text(0.15, 0.8, '(d)', transform=ax[1, 1].transAxes, fontsize=13, verticalalignment='bottom', horizontalalignment='right', color = 'white')
 
 
 plt.savefig('Entanglement_Gaussian.png')
