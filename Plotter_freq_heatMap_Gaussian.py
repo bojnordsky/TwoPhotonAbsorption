@@ -1,5 +1,4 @@
 import matplotlib.pylab as plt
-import matplotlib.ticker as ticker
 import pandas as pd
 import numpy as np
 plt.rcParams['figure.dpi'] = 300
@@ -118,6 +117,11 @@ def psi_t(t1: np.ndarray, t2: np.ndarray, OmegaP:float = 1, OmegaM:float = 1, Mu
     return psi.reshape(len(t1),len(t2))
 
 
+
+fig, ax = plt.subplots(2, 2, figsize = (5,4))
+fig.subplots_adjust(hspace=0.5, wspace=0.2)
+
+
 ############################# Frequancy Gamma_e = 0.5  ##########################################
 
 w1 = np.linspace(-2.1,2.1,1000)
@@ -127,17 +131,13 @@ Mu = 1.618855
 w_01 = 0
 w_02 = 0
 PSI = psi_w(w1, w2, OmegaP = OmegaP, OmegaM = OmegaM, w_01 = w_01, w_02 = w_02, Mu = Mu)
-PSI = plt.contourf(PSI, origin = 'lower',levels=np.linspace(0, 0.6, 24), extent=[w1.min(), w1.max(), w2.min(), w2.max()], aspect='auto', cmap='plasma')
-plt.ylabel(r'$(\omega_1 - \omega_{eg})/\Gamma_f$')
-plt.xlabel(r'$(\omega_2 - \omega_{fe})/\Gamma_f$')
-cbar = plt.colorbar(PSI)
-cbar.set_ticks(np.arange(0,0.61,0.1))
-cbar.set_ticklabels(np.round(np.arange(0,0.61,0.1),2))
-plt.tick_params(axis='both', which = 'both', direction = 'out')
-cbar.set_label(r'$|\tilde{\psi}|^2$')
-# plt.title(r'$\Gamma_e/\Gamma_f = 0.5$')
-plt.savefig('Entanglement_Gaussian_frequency_G0.5.png')
-plt.close()
+PSI = ax[0,0].contourf(PSI, origin = 'lower',levels=np.linspace(0, 0.6, 24), extent=[w1.min(), w1.max(), w2.min(), w2.max()], cmap='plasma')
+ax[0,0].set_ylabel(r'$(\omega_1 - \omega_{eg})/\Gamma_f$', labelpad=-5, fontsize=13 )
+ax[0,0].set_xlabel(r'$(\omega_2 - \omega_{fe})/\Gamma_f$', labelpad=1, fontsize=13)
+cbar = fig.colorbar(PSI)
+cbar.set_ticks(np.arange(0,0.61,0.2))
+cbar.set_ticklabels(np.round(np.arange(0,0.61,0.2),2))
+ax[0,0].tick_params(axis='both', which = 'both', direction = 'out')
 
 
 ############################ Frequancy Gamma_e = 5  ##########################################
@@ -148,25 +148,20 @@ Mu = 0.198731
 w_01 = 0
 w_02 = 0
 PSI = psi_w(w1, w2, OmegaP = OmegaP, OmegaM = OmegaM, w_01 = w_01, w_02 = w_02, Mu = Mu)
-PSI = plt.contourf(PSI, origin = 'lower',levels=np.linspace(0, 0.06, 24), extent=[w1.min(), w1.max(), w2.min(), w2.max()], aspect='auto', cmap='plasma')
-plt.ylabel(r'$(\omega_1 - \omega_{eg})/\Gamma_f$')
-plt.xlabel(r'$(\omega_2 - \omega_{fe})/\Gamma_f$')
-cbar = plt.colorbar(PSI)
+PSI = ax[0,1].contourf(PSI, origin = 'lower',levels=np.linspace(0, 0.06, 24), extent=[w1.min(), w1.max(), w2.min(), w2.max()], cmap='plasma')
+ax[0,1].set_xlabel(r'$(\omega_2 - \omega_{fe})/\Gamma_f$', labelpad=1, fontsize=13)
+cbar = fig.colorbar(PSI)
 cbar.set_ticks(np.arange(0,0.061,0.02))
 cbar.set_ticklabels(np.round(np.arange(0,0.061,0.02),2))
-plt.tick_params(axis='both', which = 'both', direction = 'out')
-plt.xticks(np.arange(-9, 9.5, 3))  # x-axis from -8 to 8 with a step of 2
-plt.yticks(np.arange(-9, 9.5, 3))  # y-axis from -8 to 8 with a step of 2
+ax[0,1].tick_params(axis='both', which = 'both', direction = 'out')
+ax[0,1].set_xticks([-9,0,9])  
+ax[0,1].set_yticks([-9,0,9])  
 
-cbar.set_label(r'$|\tilde{\psi}|^2$')
-# plt.title(r'$\Gamma_e/\Gamma_f = 5$')
-plt.savefig('Entanglement_Gaussian_frequency_G5.png')
-plt.close()
+cbar.set_label(r'$|\tilde{\psi}|^2$', labelpad=3, fontsize=13)
 
 
 
-
-############################# Time Gamma_e = 0.5  ##########################################
+# ############################# Time Gamma_e = 0.5  ##########################################
 t1 = np.linspace(-2.05,2.05,1000)
 t2 = t1
 OmegaP, OmegaM = 0.78826, 1.38264
@@ -174,19 +169,13 @@ Mu = 1.618855
 Mu = 0
 
 PSI = psi_t(t1, t2, OmegaP = OmegaP, OmegaM = OmegaM, Mu = Mu)
-# print(PSI.max())
-PSI = plt.contourf(PSI, origin = 'lower', levels=np.linspace(0,0.18, 30), extent=[t1.min(), t1.max(), t2.min(), t2.max()], aspect='auto', cmap='plasma')
-plt.ylabel(r'$t_1 \Gamma_f$')
-plt.xlabel(r'$(t_2 - \mu)\Gamma_f$')
-cbar = plt.colorbar(PSI)
-cbar.set_ticks(np.arange(0,.181,0.05))
-cbar.set_ticklabels(np.round(np.arange(0,0.181,0.05),2))
-# plt.plot([-2.5,2.1],[-2.5+Mu,2.1+Mu],'--')
-plt.tick_params(axis='both', which = 'both', direction = 'out')
-cbar.set_label(r'$|\psi|^2$')
-# plt.title(r'$\Gamma_e/\Gamma_f = 0.5$')
-plt.savefig('Entanglement_Gaussian_time_G0.5.png')
-plt.close()
+PSI = ax[1,0].contourf(PSI, origin = 'lower', levels=np.linspace(0,0.18, 30), extent=[t1.min(), t1.max(), t2.min(), t2.max()], cmap='plasma')
+ax[1,0].set_ylabel(r'$t_1 \Gamma_f$', labelpad=-5, fontsize=13 )
+ax[1,0].set_xlabel(r'$(t_2 - \mu)\Gamma_f$', labelpad=1, fontsize=13)
+cbar = fig.colorbar(PSI)
+cbar.set_ticks(np.arange(0,.181,0.06))
+cbar.set_ticklabels(np.round(np.arange(0,0.181,0.06),2))
+ax[1,0].tick_params(axis='both', which = 'both', direction = 'out')
 
 
 ############################# Time Gamma_e = 5  ##########################################
@@ -196,17 +185,22 @@ OmegaP, OmegaM = 1.05276448624927841, 10.469057374949045
 Mu = 0.198731
 Mu = 0
 PSI = psi_t(t1, t2, OmegaP = OmegaP, OmegaM = OmegaM, Mu = Mu)
-PSI = plt.contourf(PSI, origin = 'lower', levels=np.linspace(0,1.8, 30), extent=[t1.min(), t1.max(), t2.min(), t2.max()], aspect='auto', cmap='plasma')
-plt.ylabel(r'$t_1 \Gamma_f$')
-plt.xlabel(r'$(t_2 - \mu)\Gamma_f$')
+PSI = ax[1,1].contourf(PSI, origin = 'lower', levels=np.linspace(0,1.8, 30), extent=[t1.min(), t1.max(), t2.min(), t2.max()], cmap='plasma')
+ax[1,1].set_xlabel(r'$(t_2 - \mu)\Gamma_f$', labelpad=1, fontsize=13)
 cbar = plt.colorbar(PSI)
-cbar.set_ticks(np.arange(0,1.81,0.3))
-cbar.set_ticklabels(np.round(np.arange(0,1.81,0.3),1))
-# plt.plot([-2.5,2.1],[-2.5+Mu,2.1+Mu],'--')
-plt.tick_params(axis='both', which = 'both', direction = 'out')
-cbar.set_label(r'$|\psi|^2$')
-# plt.title(r'$\Gamma_e/\Gamma_f = 5$')
-plt.savefig('Entanglement_Gaussian_time_G5.png')
-plt.close()
+cbar.set_ticks(np.arange(0,1.81,0.6))
+cbar.set_ticklabels(np.round(np.arange(0,1.81,0.6),1))
+ax[1,1].tick_params(axis='both', which = 'both', direction = 'out')
+cbar.set_label(r'$|\psi|^2$', labelpad=3, fontsize=13)
+
+
+ax[0, 0].text(0.15, 0.8, '(a)', transform=ax[0, 0].transAxes, fontsize=10, verticalalignment='bottom', horizontalalignment='right', color = 'white')
+ax[0, 1].text(0.15, 0.8, '(b)', transform=ax[0, 1].transAxes, fontsize=10, verticalalignment='bottom', horizontalalignment='right', color = 'white')
+ax[1, 0].text(0.15, 0.8, '(c)', transform=ax[1, 0].transAxes, fontsize=10, verticalalignment='bottom', horizontalalignment='right', color = 'white')
+ax[1, 1].text(0.15, 0.8, '(d)', transform=ax[1, 1].transAxes, fontsize=10, verticalalignment='bottom', horizontalalignment='right', color = 'white')
+
+
+plt.savefig('Entanglement_Gaussian.png')
+plt.show()
 
 
