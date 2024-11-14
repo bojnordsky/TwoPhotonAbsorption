@@ -1,17 +1,11 @@
 import matplotlib.pylab as plt
-import matplotlib.ticker as ticker
 import pandas as pd
 import numpy as np
-import os
-
 plt.rcParams['figure.dpi'] = 300
 plt.style.use('physrev.mplstyle')
+import os
 os.makedirs('Plots',exist_ok=True)
 os.chdir('Plots')
-
-
-
-
 
 # Entanglement for optimum case in frequency
 def psi_w(w1:  np.ndarray, w2:  np.ndarray, Gamma_e: float , Gamma_f: float, t_star: float = 0, 
@@ -125,26 +119,31 @@ def psi_t(t2: np.ndarray, t1: np.ndarray, Gamma_e: float , Gamma_f: float ) -> n
     return psi.reshape(len(t2),len(t1))
 
 
+fig, ax = plt.subplots(2, 2, figsize = (5,4))
+fig.subplots_adjust(hspace=0.4, wspace=0.25)
+
+
+
+
 
 ############################## Frequancy Gamma_e = 0.5  ##########################################
-w1 = np.linspace(-2.5,2.5,100)
+w1 = np.linspace(-3,3,100)
 w2 = w1
 Gamma_e, Gamma_f = 0.5, 1
 Mu = 0
 w_eg = 0
 w_fg = 0
 PSI = psi_w(w1, w2, Gamma_e = Gamma_e, Gamma_f = Gamma_f, w_eg = w_eg, w_fg = w_fg)
-PSI = plt.contourf(w2,w1,PSI, origin = 'lower',levels=np.linspace(0, 0.85, 24), aspect='auto', cmap='plasma')
-plt.ylabel(r'$(\omega_1 - \omega_{eg})/\Gamma_f$')
-plt.xlabel(r'$(\omega_2 - \omega_{fe})/\Gamma_f$')
-cbar = plt.colorbar(PSI)
+PSI = ax[0,0].contourf(w2,w1,PSI, origin = 'lower',levels=np.linspace(0, 0.85, 24), cmap='plasma')
+ax[0,0].set_ylabel(r'$(\omega_1 - \omega_{eg})/\Gamma_f$', labelpad=-5, fontsize=13 )
+ax[0,0].set_xlabel(r'$(\omega_2 - \omega_{fe})/\Gamma_f$', labelpad=0, fontsize=13)
+cbar = fig.colorbar(PSI)
 cbar.set_ticks(np.arange(0,0.9,0.2))
 cbar.set_ticklabels(np.round(np.arange(0,0.9,0.2),2))
-plt.tick_params(axis='both', which = 'both', direction = 'out')
-cbar.set_label(r'$|\tilde{\psi}_{opt}|^2$')
-# plt.title(r'$\Gamma_e/\Gamma_f = 0.5$')
-plt.savefig('Entanglement_OptimumCase_frequency_G0.5.png')
-plt.close()
+ax[0,0].tick_params(axis='both', which = 'both', direction = 'out')
+# cbar.set_label(r'$|\tilde{\psi}_{opt}|^2$')
+ax[0,0].set_xticks(np.linspace(-3,3,3))  
+ax[0,0].set_yticks(np.linspace(-3,3,3))  
 
 
 ############################ Frequancy Gamma_e = 5  ##########################################
@@ -155,19 +154,18 @@ Mu = 0
 w_eg = 0
 w_fg = 0
 PSI = psi_w(w1, w2, Gamma_e = Gamma_e, Gamma_f = Gamma_f, w_eg = w_eg, w_fg = w_fg)
-PSI = plt.contourf(w2,w1,PSI, origin = 'lower',levels=np.linspace(0, 0.09, 24), aspect='auto', cmap='plasma')
-plt.ylabel(r'$(\omega_1 - \omega_{eg})/\Gamma_f$')
-plt.xlabel(r'$(\omega_2 - \omega_{fe})/\Gamma_f$')
-cbar = plt.colorbar(PSI)
+PSI = ax[0,1].contourf(w2,w1,PSI, origin = 'lower',levels=np.linspace(0, 0.09, 24), cmap='plasma')
+ax[0,1].set_xlabel(r'$(\omega_2 - \omega_{fe})/\Gamma_f$', labelpad=0, fontsize=13)
+cbar = fig.colorbar(PSI)
 cbar.set_ticks(np.arange(0,0.09,0.02))
 cbar.set_ticklabels(np.round(np.arange(0,0.09,0.02),2))
-plt.xticks(np.arange(-8, 9, 4))  # x-axis from -8 to 8 with a step of 2
-plt.yticks(np.arange(-8, 9, 4))  # y-axis from -8 to 8 with a step of 2
-plt.tick_params(axis='both', which = 'both', direction = 'out')
-cbar.set_label(r'$|\tilde{\psi}_{opt}|^2$')
-# plt.title(r'$\Gamma_e/\Gamma_f = 5$')
-plt.savefig('Entanglement_OptimumCase_frequency_G5.png')
-plt.close()
+ax[0,1].set_xticks(np.arange(-8, 9, 4))  # x-axis from -8 to 8 with a step of 2
+ax[0,1].set_yticks(np.arange(-8, 9, 4))  # y-axis from -8 to 8 with a step of 2
+ax[0,1].tick_params(axis='both', which = 'both', direction = 'out')
+cbar.set_label(r'$|\tilde{\psi}_{opt}|^2$', fontsize=13)
+
+ax[0,1].set_xticks(np.linspace(-8,8,5))  
+ax[0,1].set_yticks(np.linspace(-8,8,5))  
 
 
 
@@ -181,18 +179,17 @@ t2 = np.linspace(-1,0,100)
 Gamma_e, Gamma_f = 0.5, 1
 
 PSI = psi_t(t2, t1, Gamma_e = Gamma_e, Gamma_f = Gamma_f)
-PSI = plt.contourf(t2,t1, PSI, origin = 'lower', levels=np.linspace(0,0.5, 50), aspect='auto', cmap='plasma')
-plt.ylabel(r'$t_1 \Gamma_f$')
-plt.xlabel(r'$t_2\Gamma_f$')
-cbar = plt.colorbar(PSI)
+PSI = ax[1,0].contourf(t2,t1, PSI, origin = 'lower', levels=np.linspace(0,0.5, 50), cmap='plasma')
+ax[1,0].set_ylabel(r'$t_1 \Gamma_f$', labelpad=-5, fontsize=13 )
+ax[1,0].set_xlabel(r'$(t_2 - \mu)\Gamma_f$', labelpad=1, fontsize=13)
+cbar = fig.colorbar(PSI)
 cbar.set_ticks(np.arange(0,0.51,0.1))
 cbar.set_ticklabels(np.round(np.arange(0,0.51,0.1) ,2))
-plt.tick_params(axis='both', which = 'both', direction = 'out')
-cbar.set_label(r'$|\psi_{opt}|^2$')
+ax[1,0].tick_params(axis='both', which = 'both', direction = 'out')
+# cbar.set_label(r'$|\psi_{opt}|^2$')
+ax[1,0].set_xticks([-1,-0.5,0])  
+ax[1,0].set_yticks([-1,-0.5,0])  
 
-# plt.title(r'$\Gamma_e/\Gamma_f = 0.5$')
-plt.savefig('Entanglement_OptimumCase_time_G0.5.png')
-plt.close()
 
 
 ############################# Time Gamma_e = 5  ##########################################
@@ -203,16 +200,26 @@ Gamma_e, Gamma_f = 5, 1
 
 
 PSI = psi_t(t2, t1, Gamma_e = Gamma_e, Gamma_f = Gamma_f)
-PSI = plt.contourf(t2,t1, PSI, origin = 'lower', levels=np.linspace(0,5, 50), extent=[t2.min(), t2.max(), t1.min(), t1.max()], aspect='auto', cmap='plasma')
-plt.ylabel(r'$t_1 \Gamma_f$')
-plt.xlabel(r'$t_2\Gamma_f$')
-cbar = plt.colorbar(PSI)
+PSI = ax[1,1].contourf(t2,t1, PSI, origin = 'lower', levels=np.linspace(0,5, 50), cmap='plasma')
+ax[1,1].set_xlabel(r'$(t_2 - \mu)\Gamma_f$', labelpad=1, fontsize=13)
+cbar = fig.colorbar(PSI)
 cbar.set_ticks(np.arange(0,5.1,1))
 cbar.set_ticklabels(np.round(np.arange(0,5.1,1) ,2))
-plt.tick_params(axis='both', which = 'both', direction = 'out')
-cbar.set_label(r'$|\psi_{opt}|^2$')
+ax[1,1].tick_params(axis='both', which = 'both', direction = 'out')
+cbar.set_label(r'$|\psi_{opt}|^2$', fontsize=13)
+ax[1,1].set_xticks([-1,-0.5,0])  
+ax[1,1].set_yticks([-1,-0.5,0])  
 
-# plt.title(r'$\Gamma_e/\Gamma_f = 5$')
-plt.savefig('Entanglement_OptimumCase_time_G5.png')
-plt.close()
+ax[0, 0].text(0.2, 0.8, '(a)', transform=ax[0, 0].transAxes, fontsize=13, 
+              verticalalignment='bottom', horizontalalignment='right', color = 'white')
+ax[0, 1].text(0.2, 0.8, '(b)', transform=ax[0, 1].transAxes, fontsize=13,
+              verticalalignment='bottom', horizontalalignment='right', color = 'white')
+ax[1, 0].text(0.2, 0.8, '(c)', transform=ax[1, 0].transAxes, fontsize=13,
+              verticalalignment='bottom', horizontalalignment='right', color = 'white')
+ax[1, 1].text(0.2, 0.8, '(d)', transform=ax[1, 1].transAxes, fontsize=13, 
+              verticalalignment='bottom', horizontalalignment='right', color = 'white')
+
+
+plt.savefig('Entanglement_OptimumCase.png')
+# plt.show()
 
