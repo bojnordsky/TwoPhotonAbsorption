@@ -54,7 +54,7 @@ inputFile = './DataSets/' + inputFile
 contours.append(plot_contour(ax[2, 1], inputFile, scale = 0.25))
 
 
-ax[0, 0].set_ylabel(r'$\Delta_1/\Gamma_f$', labelpad=-3, fontsize=10)
+ax[0, 0].set_ylabel(r'$\Delta_1/\Gamma_f$', labelpad=-3, fontsize=13)
 ax[0, 0].set_xticklabels([])
 ax[0, 0].set_yticks(np.arange(-3,4,3))
 
@@ -64,19 +64,19 @@ ax[0, 1].set_yticklabels([])
 ax[1, 0].set_xlabel(r'$\Delta_2/\Gamma_f$')
 ax[1, 0].set_xticklabels([])
 ax[1, 0].set_yticks(np.arange(-3,4,3))
-ax[1, 0].set_ylabel(r'$\Delta_1/\Gamma_f$', labelpad=-3, fontsize=10)
+ax[1, 0].set_ylabel(r'$\Delta_1/\Gamma_f$', labelpad=-3, fontsize=13)
 
 ax[1, 1].set_yticklabels([])
 ax[1, 1].set_xticklabels([])
 
 ax[2, 0].set_xticks(np.arange(-3,4,3))
 ax[2, 0].set_yticks(np.arange(-3,4,3))
-ax[2, 0].set_xlabel(r'$\Delta_2/\Gamma_f$', labelpad=5, fontsize=10)
-ax[2, 0].set_ylabel(r'$\Delta_1/\Gamma_f$', labelpad=-3, fontsize=10)
+ax[2, 0].set_xlabel(r'$\Delta_2/\Gamma_f$', labelpad=5, fontsize=13)
+ax[2, 0].set_ylabel(r'$\Delta_1/\Gamma_f$', labelpad=-3, fontsize=13)
 
 ax[2, 1].set_xticks(np.arange(-3,4,3))
 ax[2, 1].set_yticklabels([])
-ax[2, 1].set_xlabel(r'$\Delta_2/\Gamma_f$', labelpad=5, fontsize=10)
+ax[2, 1].set_xlabel(r'$\Delta_2/\Gamma_f$', labelpad=5, fontsize=13)
 
 ax[0, 0].text(0.15, 0.8, '(a)', transform=ax[0, 0].transAxes, fontsize=10, verticalalignment='bottom', horizontalalignment='right', color = 'white')
 ax[0, 1].text(0.15, 0.8, '(b)', transform=ax[0, 1].transAxes, fontsize=10, verticalalignment='bottom', horizontalalignment='right', color = 'white')
@@ -87,19 +87,21 @@ ax[2, 1].text(0.15, 0.8, '(f)', transform=ax[2, 1].transAxes, fontsize=10, verti
 
 scale = 0.65
 cbar1 = fig.colorbar(contours[0], ax=ax[0, :], orientation="vertical", fraction=0.15, pad=0.02, shrink = 0.95)
-cbar1.set_label(r'$P_f^{max}$', labelpad=1)
+cbar1.set_label(r'$P_f^{max}$', labelpad=1, fontsize=13)
 cbar1.set_ticks(np.arange(0,scale,0.2))
 cbar1.set_ticklabels(np.round(np.arange(0,scale,0.2),2))
+
 cbar2 = fig.colorbar(contours[2], ax=ax[1, :], orientation="vertical", fraction=0.15, pad=0.02, shrink = 0.95)
-cbar2.set_label(r'$P_f^{max}$', labelpad=1)
+cbar2.set_label(r'$P_f^{max}$', labelpad=1, fontsize=13)
 cbar2.set_ticks(np.arange(0,scale,0.2))
 cbar2.set_ticklabels(np.round(np.arange(0,scale,0.2),2))
 
 scale = 0.25
 cbar2 = fig.colorbar(contours[4], ax=ax[2, :], orientation="vertical", fraction=0.15, pad=0.02, shrink = 0.95)
-cbar2.set_label(r'$P_f^{max}$', labelpad=1)
+cbar2.set_label(r'$P_f^{max}$', labelpad=1, fontsize=13)
 cbar2.set_ticks(np.arange(0,scale,0.1))
 cbar2.set_ticklabels(np.round(np.arange(0,scale,0.1),2))
+
 ax[0,0].tick_params(axis='both', which = 'both', direction = 'out')
 ax[0,1].tick_params(axis='both', which = 'both', direction = 'out')
 ax[1,0].tick_params(axis='both', which = 'both', direction = 'out')
@@ -108,7 +110,7 @@ ax[2,0].tick_params(axis='both', which = 'both', direction = 'out')
 ax[2,1].tick_params(axis='both', which = 'both', direction = 'out')
 
 
-outputFile = './Plots/'+ 'P_Del_Optimum_v1.png'
+outputFile = './Plots/'+ 'P_Del_Optimum.png'
 plt.savefig(outputFile)
 # plt.show()
 
