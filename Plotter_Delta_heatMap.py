@@ -8,7 +8,7 @@ plt.rcParams['figure.dpi'] = 300
 plt.style.use('physrev.mplstyle')
 
 fig, ax = plt.subplots(3, 2,figsize = (5,5))
-fig.subplots_adjust(hspace=0.05, wspace=0.05)
+fig.subplots_adjust(hspace=0.1, wspace=0.1)
 
 def plot_contour(ax, inputFile, outputFiel = '', scale = 0.65):
     df = pd.read_csv(inputFile)
@@ -100,11 +100,17 @@ cbar2 = fig.colorbar(contours[4], ax=ax[2, :], orientation="vertical", fraction=
 cbar2.set_label(r'$P_f^{max}$', labelpad=1)
 cbar2.set_ticks(np.arange(0,scale,0.1))
 cbar2.set_ticklabels(np.round(np.arange(0,scale,0.1),2))
+ax[0,0].tick_params(axis='both', which = 'both', direction = 'out')
+ax[0,1].tick_params(axis='both', which = 'both', direction = 'out')
+ax[1,0].tick_params(axis='both', which = 'both', direction = 'out')
+ax[1,1].tick_params(axis='both', which = 'both', direction = 'out')
+ax[2,0].tick_params(axis='both', which = 'both', direction = 'out')
+ax[2,1].tick_params(axis='both', which = 'both', direction = 'out')
 
 
 outputFile = './Plots/'+ 'P_Del_Optimum_v1.png'
 plt.savefig(outputFile)
-plt.show()
+# plt.show()
 
 
 
