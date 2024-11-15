@@ -28,6 +28,10 @@ def P(t):
 
 
 
+
+fig, ax = plt.subplots(2, 1, figsize = (3,5))
+fig.subplots_adjust(hspace=0.2, wspace=0.25)
+
 # Time dependence of probability optimised with delay
 Gamma1 = 1
 Gamma2 = 1
@@ -37,19 +41,20 @@ mu1 = 1.19
 mu2 = 0
 
 t = np.linspace(-4,8,121)
+# t = np.linspace(-4,8,12)
 P_f = P(t)
-plt.plot(t, P_f, label = r'$P_f$')
-plt.fill_between(t,P_f,0,alpha = 0.2)
-plt.plot(t,SecondPhoton(t)**2, label = r'$|\xi|^2$')
-plt.plot(t, FirstPhoton(t)**2, label = r'$|\phi|^2$')
-text1 = plt.text(t[np.argmax(P_f)]+ 0.1,P_f.max()*1.01,r'$P_f^{max}=$' + str(round(P_f.max(),2)))
-plt.xlabel(r'$\Gamma_f t$')
-plt.ylabel(r'$P_f$')
-plt.ylim(-0.0,0.85)
-plt.xlim(-4,8)
-plt.legend(frameon = False)
-plt.savefig('P_t_Gaussian_withDelay.png')
-plt.close()
+ax[0].plot(t, P_f, label = r'$P_f$')
+ax[0].fill_between(t,P_f,0,alpha = 0.2)
+ax[0].plot(t,SecondPhoton(t)**2, label = r'$|\xi|^2$')
+ax[0].plot(t, FirstPhoton(t)**2, label = r'$|\phi|^2$')
+ax[0].text(t[np.argmax(P_f)] - 0.05,P_f.max()*1.01,r'$P_f^{max}=$' + str(round(P_f.max(),2)))
+# ax[0].set_xlabel(r'$\Gamma_f t$')
+ax[0].set_ylabel(r'$P_f$', labelpad=2, fontsize=11)
+ax[0].set_ylim(-0.0,0.85)
+ax[0].set_xlim(-4,8)
+# pllegend(frameon = False)
+# plt.savefig('P_t_Gaussian_withDelay.png')
+# plt.close()
 # Time dependence of probability optimised without delay
 
 Gamma1 = 1
@@ -60,15 +65,20 @@ mu1 = 0
 mu2 = 0
 
 t = np.linspace(-4,8,121)
+# t = np.linspace(-4,8,12)
 P_f = P(t)
-plt.plot(t, P_f, label = r'$P_f$')
-plt.fill_between(t,P_f,0,alpha = 0.2)
-plt.plot(t,SecondPhoton(t)**2, label = r'$|\xi|^2$')
-plt.plot(t,FirstPhoton(t)**2, label = r'$|\phi|^2$')
-text1 = plt.text(t[np.argmax(P_f)]+ 0.1,P_f.max()*1.01,r'$P_f^{max}=$' + str(round(P_f.max(),2)))
-plt.xlabel(r'$\Gamma_f t$')
-plt.ylabel(r'$P_f$')
-plt.ylim(-0.0,0.85)
-plt.xlim(-4,8)
-plt.legend(frameon = False)
-plt.savefig('P_t_Gaussian_withoutDelay.png')
+ax[1].plot(t, P_f, label = r'$P_f$')
+ax[1].fill_between(t,P_f,0,alpha = 0.2)
+ax[1].plot(t,SecondPhoton(t)**2, label = r'$|\xi|^2$')
+ax[1].plot(t,FirstPhoton(t)**2, label = r'$|\phi|^2$')
+ax[1].text(t[np.argmax(P_f)]+ 0.1,P_f.max()*1.01,r'$P_f^{max}=$' + str(round(P_f.max(),2)))
+ax[1].set_xlabel(r'$\Gamma_f t$', fontsize=11)
+ax[1].set_ylabel(r'$P_f$', labelpad=2, fontsize=11)
+ax[1].set_ylim(-0.0,0.85)
+ax[1].set_xlim(-4,8)
+ax[0].legend(frameon = False)
+ax[0].text(0.12, 0.85, '(a)', transform=ax[0].transAxes, fontsize=10, 
+           verticalalignment='bottom', horizontalalignment='right')
+ax[1].text(0.12, 0.85, '(b)', transform=ax[1].transAxes, fontsize=10,
+           verticalalignment='bottom', horizontalalignment='right')
+plt.savefig('P_t_Gaussian.png')

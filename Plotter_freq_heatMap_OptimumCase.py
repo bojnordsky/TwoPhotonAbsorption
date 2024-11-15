@@ -119,8 +119,8 @@ def psi_t(t2: np.ndarray, t1: np.ndarray, Gamma_e: float , Gamma_f: float ) -> n
     return psi.reshape(len(t2),len(t1))
 
 
-fig, ax = plt.subplots(2, 2, figsize = (5,4))
-fig.subplots_adjust(hspace=0.4, wspace=0.25)
+fig, ax = plt.subplots(2, 2, figsize = (8,6))
+fig.subplots_adjust(hspace=0.3, wspace=0.1)
 
 
 
@@ -210,13 +210,13 @@ cbar.set_label(r'$|\psi_{opt}|^2$', fontsize=13)
 ax[1,1].set_xticks([-1,-0.5,0])  
 ax[1,1].set_yticks([-1,-0.5,0])  
 
-ax[0, 0].text(0.2, 0.8, '(a)', transform=ax[0, 0].transAxes, fontsize=13, 
+ax[0, 0].text(0.1, 0.9, '(a)', transform=ax[0, 0].transAxes, fontsize=13, 
               verticalalignment='bottom', horizontalalignment='right', color = 'white')
-ax[0, 1].text(0.2, 0.8, '(b)', transform=ax[0, 1].transAxes, fontsize=13,
+ax[0, 1].text(0.1, 0.9, '(b)', transform=ax[0, 1].transAxes, fontsize=13,
               verticalalignment='bottom', horizontalalignment='right', color = 'white')
-ax[1, 0].text(0.2, 0.8, '(c)', transform=ax[1, 0].transAxes, fontsize=13,
+ax[1, 0].text(0.1, 0.9, '(c)', transform=ax[1, 0].transAxes, fontsize=13,
               verticalalignment='bottom', horizontalalignment='right', color = 'white')
-ax[1, 1].text(0.2, 0.8, '(d)', transform=ax[1, 1].transAxes, fontsize=13, 
+ax[1, 1].text(0.1, 0.9, '(d)', transform=ax[1, 1].transAxes, fontsize=13, 
               verticalalignment='bottom', horizontalalignment='right', color = 'white')
 
 
