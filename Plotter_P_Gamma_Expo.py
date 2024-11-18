@@ -60,9 +60,9 @@ def plotter (inputFile: List[str], outputFile:str, title:str = '', label: List[s
     df1 = pd.read_csv(inputFile[0])[1:]
     df2 = pd.read_csv(inputFile[1])
     df3 = pd.read_csv(inputFile[2])[1:]
-    ax.semilogx(df1['Gamma_e'],df1['P_max'], marker = '.',linestyle ='solid', label = label[0])
-    ax.semilogx(df2['Gamma_e'],df2['P_max'], marker = '^',linestyle ='dashed', label = label[1])
-    ax.semilogx(df3['Gamma_e'],df3['P_max'], marker = '*',linestyle ='dotted', label = label[2])
+    ax.semilogx(df1['Gamma_e'],df1['P_max'], linestyle ='solid', label = label[0])
+    ax.semilogx(df2['Gamma_e'],df2['P_max'], linestyle ='dashed', label = label[1])
+    ax.semilogx(df3['Gamma_e'],df3['P_max'], linestyle ='dotted', label = label[2])
     ax.set_title(title)
     ax.set_xlabel(r'$\Gamma_e/\Gamma_f$')
     ax.set_ylabel(r'$P_f^{max}$')
